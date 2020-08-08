@@ -1,0 +1,31 @@
+import pathlib
+
+from setuptools import setup
+
+setup(
+    name="oxrdflib",
+    version="0.1.0",
+    description="rdflib stores based on pyoxigraph",
+    long_description=(pathlib.Path(__file__).parent / "README.md").read_text(),
+    long_description_content_type="text/markdown",
+    url="https://github.com/oxigraph/oxrdflib",
+    author="Tpt",
+    author_email="thomas@pellissier-tanon.fr",
+    license="BSD-3-Clause",
+    platforms=["any"],
+    python_requires=">=3.5",
+    classifiers=[
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 3 :: Only",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "License :: OSI Approved :: BSD License",
+        "Topic :: Software Development :: Libraries :: Python Modules",
+        "Topic :: Database :: Database Engines/Servers",
+    ],
+    packages=["oxrdflib"],
+    install_requires=["pyoxigraph>=0.1.0-rc.1,<0.2", "rdflib>=4.0,<6.0"],
+    entry_points={"rdf.plugins.store": ["OxMemory = oxrdflib:MemoryOxStore", "OxSled = oxrdflib:SledOxStore"]},
+)
