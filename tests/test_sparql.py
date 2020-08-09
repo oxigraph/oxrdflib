@@ -31,12 +31,14 @@ class SparqlTestCase(unittest.TestCase):
         g = ConjunctiveGraph("OxMemory")
         g.add((EX.foo, RDF.type, EX.Entity))
         result = g.query("SELECT * WHERE { ?s ?p ?o }")
+        self.assertEquals(len(result), 1)
         self.assertIsInstance(result.serialize(), bytes)
 
     def test_construct_query(self):
         g = ConjunctiveGraph("OxMemory")
         g.add((EX.foo, RDF.type, EX.Entity))
         result = g.query("CONSTRUCT WHERE { ?s ?p ?o }")
+        self.assertEquals(len(result), 1)
         self.assertIsInstance(result.serialize(), bytes)
 
 
