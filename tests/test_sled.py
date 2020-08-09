@@ -1,7 +1,7 @@
 import shutil
 import unittest
 
-from rdflib import RDF, Namespace, Literal, XSD, Graph, ConjunctiveGraph
+from rdflib import RDF, Namespace, Literal, XSD, Graph, ConjunctiveGraph, BNode
 
 EX = Namespace("http://example.com/")
 
@@ -30,11 +30,11 @@ class StoreTestCase(unittest.TestCase):
 
     def _fill_graph(self, g: Graph):
         g.add((EX.foo, RDF.type, EX.Entity))
-        g.add((EX.foo, EX.prop, EX.bar))
+        g.add((EX.foo, EX.prop, BNode("123")))
         g.add((EX.foo, EX.prop1, Literal("foo")))
         g.add((EX.foo, EX.prop1, Literal("foo", lang="en")))
         g.add((EX.foo, EX.prop1, Literal("1", datatype=XSD.integer)))
-        g.remove((EX.foo, EX.prop, EX.bar))
+        g.remove((EX.foo, EX.prop, BNode("123")))
 
     def _test_graph(self, g: Graph):
         self.assertIn((EX.foo, RDF.type, EX.Entity), g)
