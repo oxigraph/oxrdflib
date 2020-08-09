@@ -1,6 +1,12 @@
 Oxrdflib
 ========
 
+[![PyPI](https://img.shields.io/pypi/v/oxrdflib)](https://pypi.org/project/oxrdflib/)
+![PyPI - Implementation](https://img.shields.io/pypi/implementation/oxrdflib)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/oxrdflib)
+[![actions status](https://github.com/oxigraph/oxrdflib/workflows/build/badge.svg)](https://github.com/oxigraph/oxrdflib/actions)
+[![Gitter](https://badges.gitter.im/oxigraph/community.svg)](https://gitter.im/oxigraph/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+
 Oxrdflib provides [rdflib](https://rdflib.readthedocs.io/) stores using [pyoxigraph](https://oxigraph.org/pyoxigraph/).
 
 The stores could be used as drop-in replacements of the rdflib default ones. They supports context but not formulas.
@@ -10,7 +16,7 @@ Two stores are currently provided:
 * An in-memory store, named `"OxMemory"`.
 * A disk-based store based on the [Sled key-value store](https://sled.rs/), named `"OxSled"`.
 
-Oxrdflib will be available on Pypi and installable with:
+Oxrdflib is [available on Pypi](https://pypi.org/project/oxrdflib/) and installable with:
 ```bash
 pip install oxrdflib
 ```

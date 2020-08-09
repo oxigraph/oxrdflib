@@ -25,6 +25,11 @@ setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Database :: Database Engines/Servers",
     ],
+    project_urls={
+        "Documentation": "https://github.com/oxigraph/oxrdflib/blob/master/README.md",
+        "Source": "https://github.com/oxigraph/oxrdflib",
+        "Tracker": "https://github.com/oxigraph/oxrdflib/issues",
+    },
     packages=["oxrdflib"],
     install_requires=["pyoxigraph>=0.1.0-rc.1,<0.2", "rdflib>=4.0,<6.0"],
     entry_points={"rdf.plugins.store": ["OxMemory = oxrdflib:MemoryOxStore", "OxSled = oxrdflib:SledOxStore"]},
