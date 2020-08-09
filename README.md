@@ -12,6 +12,8 @@ Oxrdflib provides [rdflib](https://rdflib.readthedocs.io/) stores using [pyoxigr
 The stores could be used as drop-in replacements of the rdflib default ones. They supports context but not formulas.
 Transaction support is not implemented yet.
 
+SPARQL query evaluation is done by pyoxigraph instead of rdflib if a oxrdflib store is used.
+
 Two stores are currently provided:
 * An in-memory store, named `"OxMemory"`.
 * A disk-based store based on the [Sled key-value store](https://sled.rs/), named `"OxSled"`.

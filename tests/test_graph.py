@@ -250,3 +250,7 @@ class GraphTestCase(unittest.TestCase):
         self.assertEqual((bob, likes, cheese) in g1, False)
 
         self.assertEqual((michel, likes, cheese) in g1, True)
+
+
+if __name__ == "__main__":
+    unittest.main()

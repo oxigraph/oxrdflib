@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
 import pyoxigraph as ox
 from rdflib import Graph
+from rdflib.query import Result
 from rdflib.store import Store, VALID_STORE
-from rdflib.term import URIRef, BNode, Literal
+from rdflib.term import URIRef, BNode, Literal, Variable
 
 __all__ = ["MemoryOxStore", "SledOxStore"]
 
@@ -47,7 +48,33 @@ class _BaseOxStore(Store, ABC):
         return (_from_ox(q[3]) for q in iter)
 
     def query(self, query, initNs, initBindings, queryGraph, **kwargs):
-        raise NotImplementedError
+        if initNs:
+            query = (
+                "".join("PREFIX {}: <{}>\n".format(prefix, namespace) for prefix, namespace in initNs.items()) + query
+            )
+        if initBindings:
+            query += "\nVALUES ( {} ) {{ ({}) }}".format(
+                " ".join("?{}".format(k) for k in initBindings.keys()), " ".join(v.n3() for v in initBindings.values())
+            )
+        result = self._inner.query(
+            query,
+            use_default_graph_as_union=queryGraph == "__UNION__",
+            default_graph_uris=[ox.NamedNode(queryGraph)] if isinstance(queryGraph, URIRef) else None,
+        )
+        if isinstance(result, bool):
+            out = Result("ASK")
+            out.askAnswer = result
+        elif isinstance(result, ox.QuerySolutions):
+            out = Result("SELECT")
+            out.vars = [Variable(v.value) for v in result.variables]
+            out.bindings = ({v: _from_ox(solution[str(v)]) for v in out.vars} for solution in result)
+        elif isinstance(result, ox.QueryTriples):
+            out = Result("CONSTRUCT")
+            out.graph = Graph()
+            out.graph += (_from_ox(t) for t in result)
+        else:
+            raise ValueError("Unexpected query result: {}".format(result))
+        return out
 
     def update(self, update, initNs, initBindings, queryGraph, **kwargs):
         raise NotImplementedError
@@ -134,6 +161,8 @@ def _to_ox_term_pattern(term):
 
 
 def _from_ox(term):
+    if term is None:
+        return None
     if isinstance(term, ox.NamedNode):
         return URIRef(term.value)
     elif isinstance(term, ox.BlankNode):

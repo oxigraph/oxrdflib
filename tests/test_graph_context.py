@@ -341,3 +341,7 @@ class ContextTestCase(unittest.TestCase):
         self.removeStuff()
         self.assertEqual(len(list(c1triples((Any, Any, Any)))), 0)
         self.assertEqual(len(list(triples((Any, Any, Any)))), 0)
+
+
+if __name__ == "__main__":
+    unittest.main()
