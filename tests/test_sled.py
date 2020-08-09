@@ -11,6 +11,7 @@ class StoreTestCase(unittest.TestCase):
         g = ConjunctiveGraph("OxSled")
         self._fill_graph(g)
         self._test_graph(g)
+        self.assertEqual(len(list(iter(g))), 4)
 
     def test_sled_store_open(self):
         g = ConjunctiveGraph("OxSled")
@@ -38,6 +39,7 @@ class StoreTestCase(unittest.TestCase):
     def _test_graph(self, g: Graph):
         self.assertIn((EX.foo, RDF.type, EX.Entity), g)
         self.assertNotIn((EX.foo, EX.prop, EX.bar), g)
+        self.assertEqual(len(g), 4)
 
 
 if __name__ == "__main__":

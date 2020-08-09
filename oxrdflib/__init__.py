@@ -168,7 +168,10 @@ def _from_ox(term):
     elif isinstance(term, ox.BlankNode):
         return BNode(term.value)
     elif isinstance(term, ox.Literal):
-        return Literal(term.value, lang=term.language, datatype=URIRef(term.datatype.value))
+        if term.language:
+            return Literal(term.value, lang=term.language)
+        else:
+            return Literal(term.value, datatype=URIRef(term.datatype.value))
     elif isinstance(term, ox.DefaultGraph):
         return None
     elif isinstance(term, ox.Triple):
