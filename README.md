@@ -9,10 +9,10 @@ Oxrdflib
 
 Oxrdflib provides [rdflib](https://rdflib.readthedocs.io/) stores using [pyoxigraph](https://oxigraph.org/pyoxigraph/).
 
-The stores could be used as drop-in replacements of the rdflib default ones. They supports context but not formulas.
+The stores could be used as drop-in replacements of the rdflib default ones. They support context but not formulas.
 Transaction support is not implemented yet.
 
-SPARQL query evaluation is done by pyoxigraph instead of rdflib if a oxrdflib store is used.
+SPARQL query evaluation is done by pyoxigraph instead of rdflib if an oxrdflib store is used.
 
 Two stores are currently provided:
 * An in-memory store, named `"OxMemory"`.
@@ -54,7 +54,8 @@ Sled is not stable yet and its storage system might change in the future.
 
 To open Sled based graph in the directory `test_dir` use
 ```python
-rdflib.Graph(store="OxSled", "test_dir")
+graph = rdflib.Graph(store="OxSled")
+graph.open("test_dir")
 ```
 The store is closed with the `close()` method or automatically when Python garbage collector collects the store object.
 

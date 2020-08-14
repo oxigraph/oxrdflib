@@ -34,7 +34,7 @@ class SparqlTestCase(unittest.TestCase):
         result = g.query("SELECT ?s WHERE { ?s ?p ?o }")
         self.assertEqual(len(result), 1)
         self.assertEqual(
-            json.loads(result.serialize(format="json")),
+            json.loads(result.serialize(format="json").decode("utf-8")),
             {
                 "results": {"bindings": [{"s": {"type": "uri", "value": "http://example.com/foo"}}]},
                 "head": {"vars": ["s"]},
@@ -47,7 +47,7 @@ class SparqlTestCase(unittest.TestCase):
         result = g.query("SELECT ?s WHERE { ?s ?p ?o }")
         self.assertEqual(len(result), 1)
         self.assertEqual(
-            json.loads(result.serialize(format="json")),
+            json.loads(result.serialize(format="json").decode("utf-8")),
             {
                 "results": {"bindings": [{"s": {"type": "uri", "value": "http://example.com/foo"}}]},
                 "head": {"vars": ["s"]},
