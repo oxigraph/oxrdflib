@@ -3,7 +3,7 @@ import pyoxigraph as ox
 from rdflib import Graph
 from rdflib.query import Result
 from rdflib.store import Store, VALID_STORE
-from rdflib.term import URIRef, BNode, Literal, Variable
+from rdflib.term import URIRef, BNode, Literal, Variable, Node
 
 __all__ = ["MemoryOxStore", "SledOxStore"]
 
@@ -59,7 +59,7 @@ class _BaseOxStore(Store, ABC):
         result = self._inner.query(
             query,
             use_default_graph_as_union=queryGraph == "__UNION__",
-            default_graph_uris=[ox.NamedNode(queryGraph)] if isinstance(queryGraph, URIRef) else None,
+            default_graph=_to_ox(queryGraph) if isinstance(queryGraph, Node) else None,
         )
         if isinstance(result, bool):
             out = Result("ASK")
