@@ -1,7 +1,7 @@
 import shutil
 import unittest
 
-from rdflib import RDF, Namespace, Literal, XSD, Graph, ConjunctiveGraph, BNode
+from rdflib import RDF, XSD, BNode, ConjunctiveGraph, Graph, Literal, Namespace
 
 EX = Namespace("http://example.com/")
 

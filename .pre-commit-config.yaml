@@ -1,27 +1,44 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.2.0
+    rev: v3.4.0
     hooks:
       - id: check-ast
       - id: check-byte-order-marker
       - id: check-case-conflict
+      - id: check-docstring-first
       - id: check-json
       - id: check-symlinks
       - id: check-merge-conflict
       - id: check-toml
+      - id: check-vcs-permalinks
       - id: check-xml
       - id: check-yaml
       - id: debug-statements
+      - id: destroyed-symlinks
       - id: detect-private-key
+      - id: end-of-file-fixer
+      - id: fix-byte-order-marker
       - id: mixed-line-ending
       - id: requirements-txt-fixer
       - id: trailing-whitespace
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.7.0
+    hooks:
+      - id: isort
   - repo: https://github.com/ambv/black
-    rev: stable
+    rev: 20.8b1
     hooks:
       - id: black
         language_version: python3
-  - repo: https://gitlab.com/pycqa/flake8
-    rev: 3.8.3
+  - repo: https://github.com/PyCQA/flake8
+    rev: 3.8.4
     hooks:
       - id: flake8
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.0
+    hooks:
+      - id: bandit
+  - repo: https://github.com/PyCQA/pydocstyle
+    rev: 5.1.1
+    hooks:
+      - id: pydocstyle

@@ -1,7 +1,7 @@
 import json
 import unittest
 
-from rdflib import RDF, Namespace, Graph, ConjunctiveGraph
+from rdflib import RDF, ConjunctiveGraph, Graph, Namespace
 
 EX = Namespace("http://example.com/")
 

@@ -1,9 +1,10 @@
 from abc import ABC, abstractmethod
+
 import pyoxigraph as ox
 from rdflib import Graph
 from rdflib.query import Result
-from rdflib.store import Store, VALID_STORE
-from rdflib.term import URIRef, BNode, Literal, Variable, Node
+from rdflib.store import VALID_STORE, Store
+from rdflib.term import BNode, Literal, Node, URIRef, Variable
 
 __all__ = ["MemoryOxStore", "SledOxStore"]
 
@@ -80,10 +81,12 @@ class _BaseOxStore(Store, ABC):
         raise NotImplementedError
 
     def commit(self):
-        """ TODO: implement """
+        # TODO: implement
+        pass
 
     def rollback(self):
-        """ TODO: implement """
+        # TODO: implement
+        pass
 
 
 class MemoryOxStore(_BaseOxStore):

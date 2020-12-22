@@ -1,4 +1,6 @@
 """
+Graph context test.
+
 Code from https://github.com/RDFLib/rdflib/blob/91037207580838e41c07eb457bd65d7cc6d6ed85/test/test_graph_context.py
 
 Copyright (c) 2002-2017, RDFLib Team
@@ -36,7 +38,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import unittest
 
-from rdflib import Graph, ConjunctiveGraph, URIRef, BNode
+from rdflib import BNode, ConjunctiveGraph, Graph, URIRef
 
 
 class ContextTestCase(unittest.TestCase):
