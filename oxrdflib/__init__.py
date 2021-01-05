@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 
 import pyoxigraph as ox
 from rdflib import Graph
+from rdflib.graph import DATASET_DEFAULT_GRAPH_ID
 from rdflib.query import Result
 from rdflib.store import VALID_STORE, Store
 from rdflib.term import BNode, Literal, Node, URIRef, Variable
@@ -13,7 +14,7 @@ class _BaseOxStore(Store, ABC):
     context_aware = True
     formula_aware = False
     transaction_aware = False
-    graph_aware = False
+    graph_aware = True
 
     @property
     @abstractmethod
@@ -45,8 +46,10 @@ class _BaseOxStore(Store, ABC):
             return sum(1 for _ in self._inner.quads_for_pattern(None, None, None, _to_ox(context)))
 
     def contexts(self, triple=None):
-        iter = self._inner if triple is None else self._inner.quads_for_pattern(*_to_ox_quad_pattern(triple))
-        return (_from_ox(q[3]) for q in iter)
+        if triple is None:
+            return (_from_ox(g) for g in self._inner.named_graphs())
+        else:
+            return (_from_ox(q[3]) for q in self._inner.quads_for_pattern(*_to_ox_quad_pattern(triple)))
 
     def query(self, query, initNs, initBindings, queryGraph, **kwargs):
         if initNs:
@@ -88,6 +91,12 @@ class _BaseOxStore(Store, ABC):
         # TODO: implement
         pass
 
+    def add_graph(self, graph):
+        self._inner.add_graph(_to_ox(graph))
+
+    def remove_graph(self, graph):
+        self._inner.remove_graph(_to_ox(graph))
+
 
 class MemoryOxStore(_BaseOxStore):
     def __init__(self, configuration=None, identifier=None):
@@ -124,6 +133,8 @@ class SledOxStore(_BaseOxStore):
 def _to_ox(term, context=None):
     if term is None:
         return None
+    elif term == DATASET_DEFAULT_GRAPH_ID:
+        return ox.DefaultGraph()
     elif isinstance(term, URIRef):
         return ox.NamedNode(term)
     elif isinstance(term, BNode):
