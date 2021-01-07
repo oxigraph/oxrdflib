@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name="oxrdflib",
-    version="0.1.1",
+    version="0.2.0",
     description="rdflib stores based on pyoxigraph",
     long_description=(pathlib.Path(__file__).parent / "README.md").read_text(),
     long_description_content_type="text/markdown",
