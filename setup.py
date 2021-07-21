@@ -31,6 +31,6 @@ setup(
         "Tracker": "https://github.com/oxigraph/oxrdflib/issues",
     },
     packages=["oxrdflib"],
-    install_requires=["pyoxigraph>=0.2,<0.3", "rdflib>=4.0,<6.0"],
+    install_requires=["pyoxigraph>=0.2,<0.3", "rdflib>=4.0,<7.0"],
     entry_points={"rdf.plugins.store": ["OxMemory = oxrdflib:MemoryOxStore", "OxSled = oxrdflib:SledOxStore"]},
 )
