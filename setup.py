@@ -33,4 +33,5 @@ setup(
     packages=["oxrdflib"],
     install_requires=["pyoxigraph>=0.2,<0.3", "rdflib>=4.0,<7.0"],
     entry_points={"rdf.plugins.store": ["OxMemory = oxrdflib:MemoryOxStore", "OxSled = oxrdflib:SledOxStore"]},
+    include_package_data=True,
 )
