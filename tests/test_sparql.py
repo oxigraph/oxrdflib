@@ -8,7 +8,7 @@ EX = Namespace("http://example.com/")
 
 class SparqlTestCase(unittest.TestCase):
     def test_ask_query(self):
-        g = ConjunctiveGraph("OxMemory")
+        g = ConjunctiveGraph("Oxigraph")
         g.add((EX.foo, RDF.type, EX.Entity))
 
         # basic
@@ -23,13 +23,13 @@ class SparqlTestCase(unittest.TestCase):
         self.assertFalse(g.query("ASK { ?s ?p ?o }", initBindings={"o": EX.NotExists}))
 
         # in specific graph
-        g = ConjunctiveGraph("OxMemory")
+        g = ConjunctiveGraph("Oxigraph")
         g1 = Graph(store=g.store, identifier=EX.g1)
         g1.add((EX.foo, RDF.type, EX.Entity))
         self.assertTrue(g1.query("ASK { ?s ?p ?o }"))
 
     def test_select_query_graph(self):
-        g = Graph("OxMemory")
+        g = Graph("Oxigraph")
         g.add((EX.foo, RDF.type, EX.Entity))
         result = g.query("SELECT ?s WHERE { ?s ?p ?o }")
         self.assertEqual(len(result), 1)
@@ -42,7 +42,7 @@ class SparqlTestCase(unittest.TestCase):
         )
 
     def test_select_query_conjunctive(self):
-        g = ConjunctiveGraph("OxMemory")
+        g = ConjunctiveGraph("Oxigraph")
         g.add((EX.foo, RDF.type, EX.Entity))
         result = g.query("SELECT ?s WHERE { ?s ?p ?o }")
         self.assertEqual(len(result), 1)
@@ -55,7 +55,7 @@ class SparqlTestCase(unittest.TestCase):
         )
 
     def test_construct_query(self):
-        g = ConjunctiveGraph("OxMemory")
+        g = ConjunctiveGraph("Oxigraph")
         g.add((EX.foo, RDF.type, EX.Entity))
         result = g.query("CONSTRUCT WHERE { ?s ?p ?o }")
         self.assertEqual(len(result), 1)

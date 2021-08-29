@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name="oxrdflib",
-    version="0.2.0",
+    version="0.3.0",
     description="rdflib stores based on pyoxigraph",
     long_description=(pathlib.Path(__file__).parent / "README.md").read_text(),
     long_description_content_type="text/markdown",
@@ -31,7 +31,13 @@ setup(
         "Tracker": "https://github.com/oxigraph/oxrdflib/issues",
     },
     packages=["oxrdflib"],
-    install_requires=["pyoxigraph~=0.2.0", "rdflib~=6.0"],
-    entry_points={"rdf.plugins.store": ["OxMemory = oxrdflib:MemoryOxStore", "OxSled = oxrdflib:SledOxStore"]},
+    install_requires=["pyoxigraph~=0.3.0", "rdflib~=6.0"],
+    entry_points={
+        "rdf.plugins.store": [
+            "Oxigraph = oxrdflib:OxigraphStore",
+            "OxMemory = oxrdflib:OxigraphStore",
+            "OxSled = oxrdflib:OxigraphStore",
+        ]
+    },
     include_package_data=True,
 )

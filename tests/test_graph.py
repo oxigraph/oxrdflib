@@ -43,7 +43,7 @@ from rdflib import Graph, URIRef
 
 class GraphTestCase(unittest.TestCase):
     def setUp(self):
-        self.graph = Graph(store="OxMemory")
+        self.graph = Graph(store="Oxigraph")
         self.michel = URIRef("urn:michel")
         self.tarek = URIRef("urn:tarek")
         self.bob = URIRef("urn:bob")

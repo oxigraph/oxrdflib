@@ -43,7 +43,7 @@ from rdflib import BNode, ConjunctiveGraph, Graph, URIRef
 
 class ContextTestCase(unittest.TestCase):
     def setUp(self):
-        self.graph = ConjunctiveGraph(store="OxMemory")
+        self.graph = ConjunctiveGraph(store="Oxigraph")
         self.michel = URIRef("urn:michel")
         self.tarek = URIRef("urn:tarek")
         self.bob = URIRef("urn:bob")

@@ -44,7 +44,7 @@ from rdflib.graph import DATASET_DEFAULT_GRAPH_ID
 
 class DatasetTestCase(unittest.TestCase):
     def setUp(self):
-        self.graph = Dataset(store="OxMemory")
+        self.graph = Dataset(store="Oxigraph")
         self.michel = URIRef("urn:michel")
         self.tarek = URIRef("urn:tarek")
         self.bob = URIRef("urn:bob")
@@ -68,7 +68,6 @@ class DatasetTestCase(unittest.TestCase):
         self.graph.close()
 
     def testGraphAware(self):
-
         if not self.graph.store.graph_aware:
             return
 

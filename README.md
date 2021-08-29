@@ -7,31 +7,31 @@ Oxrdflib
 [![actions status](https://github.com/oxigraph/oxrdflib/workflows/build/badge.svg)](https://github.com/oxigraph/oxrdflib/actions)
 [![Gitter](https://badges.gitter.im/oxigraph/community.svg)](https://gitter.im/oxigraph/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
-Oxrdflib provides [rdflib](https://rdflib.readthedocs.io/) stores using [pyoxigraph](https://oxigraph.org/pyoxigraph/).
+Oxrdflib provides an [rdflib](https://rdflib.readthedocs.io/) store based on [pyoxigraph](https://oxigraph.org/pyoxigraph/).
+This store is named `"Oxigraph"`.
 
-The stores could be used as drop-in replacements of the rdflib default ones. They support context but not formulas.
+This store can be used as drop-in replacement of the rdflib default one. It support context but not formulas.
 Transaction support is not implemented yet.
 
-SPARQL query evaluation is done by pyoxigraph instead of rdflib if an oxrdflib store is used.
-
-Two stores are currently provided:
-* An in-memory store, named `"OxMemory"`.
-* A disk-based store based on the [Sled key-value store](https://sled.rs/), named `"OxSled"`.
+SPARQL query evaluation is done by pyoxigraph instead of rdflib if the Oxigraph store is used.
+SPARQL update evaluation is still done using rdflib because of [a limitation in rdflib context management](https://github.com/RDFLib/rdflib/issues/1396).
 
 Oxrdflib is [available on Pypi](https://pypi.org/project/oxrdflib/) and installable with:
 ```bash
 pip install oxrdflib
 ```
 
-The oxrdflib stores are automatically registered as rdflib store plugins by setuptools.
+The oxrdflib store is automatically registered as an rdflib store plugin by setuptools.
+
+*Warning:* Oxigraph is not stable yet and its storage format might change in the future.
+To migrate to future version you might have to dump and load the store content.
+However, Oxigraph should be in a good enough shape to power most of use cases if you are not afraid of down time and data loss.
 
 ## API
 
-### `"OxMemory"`, an in-memory store
-
-To create a rdflib graph with pyoxigraph in memory store use
+To create a rdflib graph using the Oxigraph store use
 ```python
-rdflib.Graph(store="OxMemory")
+rdflib.Graph(store="Oxigraph")
 ```
 instead of the usual
 ```python
@@ -40,34 +40,39 @@ rdflib.Graph()
 
 Similarly, to get a conjunctive graph, use
 ```python
-rdflib.ConjunctiveGraph(store="OxMemory")
+rdflib.ConjunctiveGraph(store="Oxigraph")
 ```
 instead of the usual
 ```python
 rdflib.ConjunctiveGraph()
 ```
+and to get a dataset, use
 
-### `"OxSled"`, a disk-based store
-
-The disk-based store is based on the [Sled key-value store](https://sled.rs/).
-Sled is not stable yet and its storage system might change in the future.
-
-To open Sled based graph in the directory `test_dir` use
 ```python
-graph = rdflib.Graph(store="OxSled")
+rdflib.Dataset(store="Oxigraph")
+```
+instead of the usual
+```python
+rdflib.Dataset()
+```
+
+If you want to get the store data persisted on disk, use the `open` method on the `Graph` object (or `ConjunctiveGraph` or `Dataset`) with the directory where data should be persisted. For example:
+```python
+graph = rdflib.Graph(store="Oxigraph")
 graph.open("test_dir")
 ```
 The store is closed with the `close()` method or automatically when Python garbage collector collects the store object.
 
-It is also possible to not provide a directory name.
-In this case, a temporary directory will be created and deleted when the store is closed.
-For example, this code uses a temporary directory:
-```python
-rdflib.Graph(store="OxSled")
-```
+If the `open` method is not called Oxigraph will automatically use a ramdisk on Linux and a temporary file in the other operating systems.
 
-`rdflib.ConjunctiveGraph` is also usable with `"OxSled"`.
+To do anything else, use the usual rdflib python API.
 
+## Migration guide
+
+### From 0.2 to 0.3
+* The 0.2 stores named `"OxSled"` and `"OxMemory"` have been merged into the `"Oxigraph"` store.
+* The on-disk storage system provided by `"OxSled"` has been dropped and replaced by a new storage system based on [RocksDB](https://rocksdb.org/).
+  To migrate you need to first dump your data in RDF using `oxrdflib` 0.2 and the `serialize` method, then upgrade to `oxrdflib` 0.3, and finally reload the data using the `parse` method.
 
 ## Development
 

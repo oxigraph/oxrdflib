@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+import shutil
 
 import pyoxigraph as ox
 from rdflib import Graph
@@ -7,22 +7,39 @@ from rdflib.query import Result
 from rdflib.store import VALID_STORE, Store
 from rdflib.term import BNode, Literal, Node, URIRef, Variable
 
-__all__ = ["MemoryOxStore", "SledOxStore"]
+__all__ = ["OxigraphStore"]
 
 
-class _BaseOxStore(Store, ABC):
+class OxigraphStore(Store):
     context_aware = True
     formula_aware = False
     transaction_aware = False
     graph_aware = True
 
-    @property
-    @abstractmethod
-    def _inner(self):
-        pass
+    def __init__(self, configuration=None, identifier=None):
+        self._store = None
+        super().__init__(configuration, identifier)
+
+    def open(self, configuration, create=False):
+        if self._store is not None:
+            raise ValueError("The open function should be called before any RDF operation")
+        self._store = ox.Store(configuration)
+        return VALID_STORE
+
+    def close(self, commit_pending_transaction=False):
+        del self._store
+
+    def destroy(self, configuration):
+        shutil.rmtree(configuration)
 
     def gc(self):
         pass
+
+    @property
+    def _inner(self):
+        if self._store is None:
+            self._store = ox.Store()
+        return self._store
 
     def add(self, triple, context, quoted=False):
         if quoted:
@@ -94,38 +111,6 @@ class _BaseOxStore(Store, ABC):
 
     def remove_graph(self, graph):
         self._inner.remove_graph(_to_ox(graph))
-
-
-class MemoryOxStore(_BaseOxStore):
-    def __init__(self, configuration=None, identifier=None):
-        self._store = ox.MemoryStore()
-        super().__init__(configuration, identifier)
-
-    @property
-    def _inner(self):
-        return self._store
-
-
-class SledOxStore(_BaseOxStore):
-    def __init__(self, configuration=None, identifier=None):
-        self._store = None
-        super().__init__(configuration, identifier)
-
-    def open(self, configuration, create=False):
-        self._store = ox.SledStore(configuration)
-        return VALID_STORE
-
-    def close(self, commit_pending_transaction=False):
-        del self._store
-
-    def destroy(self, configuration):
-        raise NotImplementedError("destroy is not implemented yet for the Sled based store")
-
-    @property
-    def _inner(self):
-        if self._store is None:
-            self._store = ox.SledStore()
-        return self._store
 
 
 def _to_ox(term, context=None):
