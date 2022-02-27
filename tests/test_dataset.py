@@ -77,7 +77,7 @@ class DatasetTestCase(unittest.TestCase):
 
         # added graph exists
         self.assertEqual(
-            set(x.identifier for x in self.graph.contexts()),
+            {x.identifier for x in self.graph.contexts()},
             {self.c1, DATASET_DEFAULT_GRAPH_ID},
         )
 
@@ -88,7 +88,7 @@ class DatasetTestCase(unittest.TestCase):
 
         # added graph still exists
         self.assertEqual(
-            set(x.identifier for x in self.graph.contexts()),
+            {x.identifier for x in self.graph.contexts()},
             {self.c1, DATASET_DEFAULT_GRAPH_ID},
         )
 
@@ -102,7 +102,7 @@ class DatasetTestCase(unittest.TestCase):
 
         # graph still exists, although empty
         self.assertEqual(
-            set(x.identifier for x in self.graph.contexts()),
+            {x.identifier for x in self.graph.contexts()},
             {self.c1, DATASET_DEFAULT_GRAPH_ID},
         )
 
@@ -110,7 +110,7 @@ class DatasetTestCase(unittest.TestCase):
 
         # graph is gone
         self.assertEqual(
-            set(x.identifier for x in self.graph.contexts()),
+            {x.identifier for x in self.graph.contexts()},
             {DATASET_DEFAULT_GRAPH_ID},
         )
 
@@ -119,7 +119,7 @@ class DatasetTestCase(unittest.TestCase):
         self.assertEqual(len(self.graph), 1)
         # only default exists
         self.assertEqual(
-            set(x.identifier for x in self.graph.contexts()),
+            {x.identifier for x in self.graph.contexts()},
             {DATASET_DEFAULT_GRAPH_ID},
         )
 
@@ -129,7 +129,7 @@ class DatasetTestCase(unittest.TestCase):
         self.assertEqual(len(self.graph), 0)
         # default still exists
         self.assertEqual(
-            set(x.identifier for x in self.graph.contexts()),
+            {x.identifier for x in self.graph.contexts()},
             {DATASET_DEFAULT_GRAPH_ID},
         )
 

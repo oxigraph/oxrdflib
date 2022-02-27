@@ -53,12 +53,10 @@ class _BaseOxStore(Store, ABC):
 
     def query(self, query, initNs, initBindings, queryGraph, **kwargs):
         if initNs:
-            query = (
-                "".join("PREFIX {}: <{}>\n".format(prefix, namespace) for prefix, namespace in initNs.items()) + query
-            )
+            query = "".join(f"PREFIX {prefix}: <{namespace}>\n" for prefix, namespace in initNs.items()) + query
         if initBindings:
             query += "\nVALUES ( {} ) {{ ({}) }}".format(
-                " ".join("?{}".format(k) for k in initBindings.keys()), " ".join(v.n3() for v in initBindings.values())
+                " ".join(f"?{k}" for k in initBindings.keys()), " ".join(v.n3() for v in initBindings.values())
             )
         result = self._inner.query(
             query,
@@ -77,7 +75,7 @@ class _BaseOxStore(Store, ABC):
             out.graph = Graph()
             out.graph += (_from_ox(t) for t in result)
         else:
-            raise ValueError("Unexpected query result: {}".format(result))
+            raise ValueError(f"Unexpected query result: {result}")
         return out
 
     def update(self, update, initNs, initBindings, queryGraph, **kwargs):
@@ -149,9 +147,9 @@ def _to_ox(term, context=None):
         elif len(term) == 4:
             return ox.Quad(_to_ox(term[0]), _to_ox(term[1]), _to_ox(term[2]), _to_ox(term[3]))
         else:
-            raise ValueError("Unexpected rdflib term: {}".format(repr(term)))
+            raise ValueError(f"Unexpected rdflib term: {repr(term)}")
     else:
-        raise ValueError("Unexpected rdflib term: {}".format(repr(term)))
+        raise ValueError(f"Unexpected rdflib term: {repr(term)}")
 
 
 def _to_ox_quad_pattern(triple, context=None):
@@ -171,7 +169,7 @@ def _to_ox_term_pattern(term):
     elif isinstance(term, Graph):
         return _to_ox(term.identifier)
     else:
-        raise ValueError("Unexpected rdflib term: {}".format(repr(term)))
+        raise ValueError(f"Unexpected rdflib term: {repr(term)}")
 
 
 def _from_ox(term):
@@ -193,4 +191,4 @@ def _from_ox(term):
     elif isinstance(term, ox.Quad):
         return (_from_ox(term.subject), _from_ox(term.predicate), _from_ox(term.object)), _from_ox(term.graph_name)
     else:
-        raise ValueError("Unexpected Oxigraph term: {}".format(repr(term)))
+        raise ValueError(f"Unexpected Oxigraph term: {repr(term)}")
