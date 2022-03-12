@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name="oxrdflib",
-    version="0.2.0",
+    version="0.2.1",
     description="rdflib stores based on pyoxigraph",
     long_description=(pathlib.Path(__file__).parent / "README.md").read_text(),
     long_description_content_type="text/markdown",
@@ -21,6 +21,7 @@ setup(
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
         "License :: OSI Approved :: BSD License",
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Database :: Database Engines/Servers",
