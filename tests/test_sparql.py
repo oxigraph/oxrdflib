@@ -1,7 +1,7 @@
 import json
 import unittest
 
-from rdflib import RDF, ConjunctiveGraph, Graph, Namespace
+from rdflib import RDF, ConjunctiveGraph, Graph, Namespace, URIRef
 
 EX = Namespace("http://example.com/")
 
@@ -62,6 +62,13 @@ class SparqlTestCase(unittest.TestCase):
         self.assertEqual(
             result.serialize(format="ntriples").strip(),
             b"<http://example.com/foo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/Entity> .",
+        )
+
+    def test_query_init_ns(self):
+        g = Graph("Oxigraph")
+        g.add((EX.foo, RDF.type, URIRef("http://schema.org/Person")))
+        self.assertTrue(
+            g.query("ASK { ex:foo rdf:type schema:Person }", initNs={"ex": EX, "schema": "http://schema.org/"})
         )
 
 

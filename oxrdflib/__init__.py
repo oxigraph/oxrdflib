@@ -3,11 +3,68 @@ import shutil
 import pyoxigraph as ox
 from rdflib import Graph
 from rdflib.graph import DATASET_DEFAULT_GRAPH_ID
+from rdflib.namespace import (
+    BRICK,
+    CSVW,
+    DC,
+    DCAM,
+    DCAT,
+    DCMITYPE,
+    DCTERMS,
+    DOAP,
+    FOAF,
+    ODRL2,
+    ORG,
+    OWL,
+    PROF,
+    PROV,
+    QB,
+    RDF,
+    RDFS,
+    SDO,
+    SH,
+    SKOS,
+    SOSA,
+    SSN,
+    TIME,
+    VANN,
+    VOID,
+    XSD,
+)
 from rdflib.query import Result
 from rdflib.store import VALID_STORE, Store
 from rdflib.term import BNode, Literal, Node, URIRef, Variable
 
 __all__ = ["OxigraphStore"]
+
+_DEFAULT_NAMESPACES = {
+    "brick": BRICK,
+    "csvw": CSVW,
+    "dc": DC,
+    "dcat": DCAT,
+    "dcmitype": DCMITYPE,
+    "dcterms": DCTERMS,
+    "dcam": DCAM,
+    "doap": DOAP,
+    "foaf": FOAF,
+    "odrl": ODRL2,
+    "org": ORG,
+    "owl": OWL,
+    "prof": PROF,
+    "prov": PROV,
+    "qb": QB,
+    "rdf": RDF,
+    "rdfs": RDFS,
+    "schema": SDO,
+    "sh": SH,
+    "skos": SKOS,
+    "sosa": SOSA,
+    "ssn": SSN,
+    "time": TIME,
+    "vann": VANN,
+    "void": VOID,
+    "xsd": XSD,
+}
 
 
 class OxigraphStore(Store):
@@ -69,6 +126,7 @@ class OxigraphStore(Store):
             return (_from_ox(q[3]) for q in self._inner.quads_for_pattern(*_to_ox_quad_pattern(triple)))
 
     def query(self, query, initNs, initBindings, queryGraph, **kwargs):
+        initNs = {**_DEFAULT_NAMESPACES, **initNs} if initNs else _DEFAULT_NAMESPACES
         if initNs:
             query = "".join(f"PREFIX {prefix}: <{namespace}>\n" for prefix, namespace in initNs.items()) + query
         if initBindings:
