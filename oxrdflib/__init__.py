@@ -86,7 +86,7 @@ class OxigraphStore(Store):
         elif isinstance(result, ox.QuerySolutions):
             out = Result("SELECT")
             out.vars = [Variable(v.value) for v in result.variables]
-            out.bindings = ({v: _from_ox(solution[str(v)]) for v in out.vars} for solution in result)
+            out.bindings = ({v: _from_ox(val) for v, val in zip(out.vars, solution)} for solution in result)
         elif isinstance(result, ox.QueryTriples):
             out = Result("CONSTRUCT")
             out.graph = Graph()
@@ -160,7 +160,7 @@ def _to_ox_term_pattern(term):
 def _from_ox(term):
     if term is None:
         return None
-    if isinstance(term, ox.NamedNode):
+    elif isinstance(term, ox.NamedNode):
         return URIRef(term.value)
     elif isinstance(term, ox.BlankNode):
         return BNode(term.value)
