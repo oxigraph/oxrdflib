@@ -26,7 +26,7 @@ setup(
         "Topic :: Database :: Database Engines/Servers",
     ],
     project_urls={
-        "Documentation": "https://github.com/oxigraph/oxrdflib/blob/master/README.md",
+        "Documentation": "https://github.com/oxigraph/oxrdflib/blob/main/README.md",
         "Source": "https://github.com/oxigraph/oxrdflib",
         "Tracker": "https://github.com/oxigraph/oxrdflib/issues",
     },
