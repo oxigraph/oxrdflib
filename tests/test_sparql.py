@@ -1,7 +1,7 @@
 import json
 import unittest
 
-from rdflib import RDF, ConjunctiveGraph, Graph, Namespace, URIRef
+from rdflib import RDF, ConjunctiveGraph, Graph, Namespace
 
 EX = Namespace("http://example.com/")
 
@@ -10,14 +10,15 @@ class SparqlTestCase(unittest.TestCase):
     def test_ask_query(self):
         g = ConjunctiveGraph("Oxigraph")
         g.add((EX.foo, RDF.type, EX.Entity))
+        g.bind("ex", EX)
 
         # basic
         result = g.query("ASK { ?s ?p ?o }")
         self.assertTrue(result)
         self.assertIsInstance(result.serialize(), bytes)
 
-        # with init namespace
-        self.assertTrue(g.query("ASK { ?s ?p ex:Entity }", initNs={"ex": EX}))
+        # with not initialized prefix
+        self.assertTrue(g.query("ASK { ex:foo rdf:type ex2:Entity }", initNs={"ex2": EX}))
 
         # with init entities
         self.assertFalse(g.query("ASK { ?s ?p ?o }", initBindings={"o": EX.NotExists}))
@@ -62,13 +63,6 @@ class SparqlTestCase(unittest.TestCase):
         self.assertEqual(
             result.serialize(format="ntriples").strip(),
             b"<http://example.com/foo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/Entity> .",
-        )
-
-    def test_query_init_ns(self):
-        g = Graph("Oxigraph")
-        g.add((EX.foo, RDF.type, URIRef("http://schema.org/Person")))
-        self.assertTrue(
-            g.query("ASK { ex:foo rdf:type schema:Person }", initNs={"ex": EX, "schema": "http://schema.org/"})
         )
 
 
