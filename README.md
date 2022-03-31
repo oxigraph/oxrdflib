@@ -67,6 +67,11 @@ If the `open` method is not called Oxigraph will automatically use a ramdisk on 
 
 To do anything else, use the usual rdflib python API.
 
+## Differences with rdflib default store
+- relative IRIs are not supported by Oxigraph.
+- Just like the `SPARQLStore`, Oxigraph joins the `initBindings` parameter of the `query` method after the query has been evaluated, instead of injecting them at the beginning of the query.
+- IRI prefixes set using the `Graph` `bind` method are not persisted on disk but kept in memory. They should be added again each time the store is opened.
+
 ## Migration guide
 
 ### From 0.2 to 0.3
