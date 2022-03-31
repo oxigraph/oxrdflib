@@ -71,13 +71,8 @@ class OxigraphStore(Store):
             return (_from_ox(q[3]) for q in self._inner.quads_for_pattern(*_to_ox_quad_pattern(triple)))
 
     def query(self, query, initNs, initBindings, queryGraph, **kwargs):
-        query = (
-            "".join(
-                f"PREFIX {prefix}: <{namespace}>\n"
-                for prefix, namespace in (self._namespace_for_prefix | initNs).items()
-            )
-            + query
-        )
+        initNs = dict(self._namespace_for_prefix, **initNs)
+        query = "".join(f"PREFIX {prefix}: <{namespace}>\n" for prefix, namespace in initNs.items()) + query
         if initBindings:
             query += "\nVALUES ( {} ) {{ ({}) }}".format(
                 " ".join(f"?{k}" for k in initBindings.keys()), " ".join(v.n3() for v in initBindings.values())
