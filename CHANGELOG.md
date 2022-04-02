@@ -1,0 +1,33 @@
+## [0.3.1] - 2022-04-02
+
+### Added
+- `OxigraphStore` now implements the `bind` method allowing to set namespaces.
+  These namespaces are not persisted on disk.
+- The `query` method now injects the namespaces set in the `Graph` object (including the ones set by default in rdflib) inside of SPARQL queries.
+
+### Changed
+- The default branch is now named `main` and not `master`.
+
+
+## [0.3.0] - 2022-03-19
+
+### Added
+- `OxigraphStore` that provides both in-memory and disk-based storage.
+  The storage format is not compatible with the one of the `SledStore`.
+
+### Removed
+- `MemoryStore` and `SledStore`
+- Compatibility with Python 3.6 and rdflib 4 and 5.
+
+
+## [0.2.1] - 2022-03-12
+
+### Added
+- Compatibility with rdflib 6.
+
+
+## [0.2.0] - 2021-01-07
+
+### Added
+- `MemoryStore` in memory rdflib storage using Oxigraph.
+- `SledStore` in disk-based rdflib storage using Oxigraph.
