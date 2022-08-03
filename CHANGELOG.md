@@ -1,3 +1,10 @@
+## [0.3.2] - 2022-08-03
+
+### Changed
+- Fixes compatibility with rdflib 6.2 (`bind` method signature change).
+- Upgrades pyoxigraph requirement to 0.3.5 to make sure that bug fixes are also deployed when upgrading oxrdflib.
+
+
 ## [0.3.1] - 2022-04-02
 
 ### Added
