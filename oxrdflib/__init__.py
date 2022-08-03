@@ -114,9 +114,27 @@ class OxigraphStore(Store):
     def remove_graph(self, graph):
         self._inner.remove_graph(_to_ox(graph))
 
-    def bind(self, prefix, namespace):
+    def bind(self, prefix, namespace, override=True):
+        if not override and (prefix in self._namespace_for_prefix or namespace in self._prefix_for_namespace):
+            return  # nothing to do
+        self._delete_from_prefix(prefix)
+        self._delete_from_namespace(namespace)
         self._namespace_for_prefix[prefix] = namespace
         self._prefix_for_namespace[namespace] = prefix
+
+    def _delete_from_prefix(self, prefix):
+        if prefix not in self._namespace_for_prefix:
+            return
+        namespace = self._namespace_for_prefix[prefix]
+        del self._namespace_for_prefix[prefix]
+        self._delete_from_namespace(namespace)
+
+    def _delete_from_namespace(self, namespace):
+        if namespace not in self._prefix_for_namespace:
+            return
+        prefix = self._prefix_for_namespace[namespace]
+        del self._prefix_for_namespace[namespace]
+        self._delete_from_prefix(prefix)
 
     def prefix(self, namespace):
         return self._prefix_for_namespace.get(namespace)
