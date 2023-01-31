@@ -81,7 +81,7 @@ To do anything else, use the usual rdflib python API.
 
 ## Development
 
-To run the test do first `pip install -e` to register the stores in rdflib plugin registry.
+To run the test do first `pip install -e .` to register the stores in rdflib plugin registry.
 Then, `cd tests && python -m unittest` should run the tests.
 
 The code is automatically formatted using [black](https://github.com/psf/black). A [pre-commit](https://pre-commit.com/) configuration is provided.
