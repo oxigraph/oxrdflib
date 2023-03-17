@@ -1,5 +1,4 @@
-"""
-Graph context test.
+"""Graph context test.
 
 Code from https://github.com/RDFLib/rdflib/blob/91037207580838e41c07eb457bd65d7cc6d6ed85/test/test_graph_context.py
 
@@ -58,7 +57,7 @@ class ContextTestCase(unittest.TestCase):
         # delete the graph for each test!
         self.graph.remove((None, None, None))
 
-    def addStuff(self):
+    def add_stuff(self):
         tarek = self.tarek
         michel = self.michel
         bob = self.bob
@@ -77,7 +76,7 @@ class ContextTestCase(unittest.TestCase):
         graph.add((bob, hates, pizza))
         graph.add((bob, hates, michel))  # gasp!
 
-    def removeStuff(self):
+    def remove_stuff(self):
         tarek = self.tarek
         michel = self.michel
         bob = self.bob
@@ -96,7 +95,7 @@ class ContextTestCase(unittest.TestCase):
         graph.remove((bob, hates, pizza))
         graph.remove((bob, hates, michel))  # gasp!
 
-    def addStuffInMultipleContexts(self):
+    def add_stuff_in_multiple_contexts(self):
         c1 = self.c1
         c2 = self.c2
         triple = (self.pizza, self.hates, self.tarek)  # revenge!
@@ -110,54 +109,54 @@ class ContextTestCase(unittest.TestCase):
         graph = Graph(self.graph.store, c2)
         graph.add(triple)
 
-    def testConjunction(self):
-        self.addStuffInMultipleContexts()
+    def test_conjunction(self):
+        self.add_stuff_in_multiple_contexts()
         triple = (self.pizza, self.likes, self.pizza)
         # add to context 1
         graph = Graph(self.graph.store, self.c1)
         graph.add(triple)
         self.assertEqual(len(self.graph), len(graph))
 
-    def testAdd(self):
-        self.addStuff()
+    def test_add(self):
+        self.add_stuff()
 
-    def testRemove(self):
-        self.addStuff()
-        self.removeStuff()
+    def test_remove(self):
+        self.add_stuff()
+        self.remove_stuff()
 
-    def testLenInOneContext(self):
+    def test_len_in_one_context(self):
         c1 = self.c1
         # make sure context is empty
 
         self.graph.remove_context(self.graph.get_context(c1))
         graph = Graph(self.graph.store, c1)
-        oldLen = len(self.graph)
+        old_len = len(self.graph)
 
-        for i in range(0, 10):
+        for _ in range(0, 10):
             graph.add((BNode(), self.hates, self.hates))
-        self.assertEqual(len(graph), oldLen + 10)
-        self.assertEqual(len(self.graph.get_context(c1)), oldLen + 10)
+        self.assertEqual(len(graph), old_len + 10)
+        self.assertEqual(len(self.graph.get_context(c1)), old_len + 10)
         self.graph.remove_context(self.graph.get_context(c1))
-        self.assertEqual(len(self.graph), oldLen)
+        self.assertEqual(len(self.graph), old_len)
         self.assertEqual(len(graph), 0)
 
-    def testLenInMultipleContexts(self):
-        oldLen = len(self.graph)
-        self.addStuffInMultipleContexts()
+    def test_len_in_multiple_contexts(self):
+        old_len = len(self.graph)
+        self.add_stuff_in_multiple_contexts()
 
         # addStuffInMultipleContexts is adding the same triple to
         # three different contexts. So it's only + 1
-        self.assertEqual(len(self.graph), oldLen + 1)
+        self.assertEqual(len(self.graph), old_len + 1)
 
         graph = Graph(self.graph.store, self.c1)
-        self.assertEqual(len(graph), oldLen + 1)
+        self.assertEqual(len(graph), old_len + 1)
 
-    def testRemoveInMultipleContexts(self):
+    def test_remove_in_multiple_contexts(self):
         c1 = self.c1
         c2 = self.c2
         triple = (self.pizza, self.hates, self.tarek)  # revenge!
 
-        self.addStuffInMultipleContexts()
+        self.add_stuff_in_multiple_contexts()
 
         # triple should be still in store after removing it from c1 + c2
         self.assertTrue(triple in self.graph)
@@ -172,14 +171,14 @@ class ContextTestCase(unittest.TestCase):
         self.assertTrue(triple not in self.graph)
 
         # add again and see if remove without context removes all triples!
-        self.addStuffInMultipleContexts()
+        self.add_stuff_in_multiple_contexts()
         self.graph.remove(triple)
         self.assertTrue(triple not in self.graph)
 
-    def testContexts(self):
+    def test_contexts(self):
         triple = (self.pizza, self.hates, self.tarek)  # revenge!
 
-        self.addStuffInMultipleContexts()
+        self.add_stuff_in_multiple_contexts()
 
         def cid(c):
             return c.identifier
@@ -191,23 +190,22 @@ class ContextTestCase(unittest.TestCase):
         self.assertTrue(self.c1 in context_list, (self.c1, context_list))
         self.assertTrue(self.c2 in context_list, (self.c2, context_list))
 
-    def testRemoveContext(self):
+    def test_remove_context(self):
         c1 = self.c1
 
-        self.addStuffInMultipleContexts()
+        self.add_stuff_in_multiple_contexts()
         self.assertEqual(len(Graph(self.graph.store, c1)), 1)
         self.assertEqual(len(self.graph.get_context(c1)), 1)
 
         self.graph.remove_context(self.graph.get_context(c1))
         self.assertTrue(self.c1 not in self.graph.contexts())
 
-    def testRemoveAny(self):
-        Any = None
-        self.addStuffInMultipleContexts()
-        self.graph.remove((Any, Any, Any))
+    def test_remove_any(self):
+        self.add_stuff_in_multiple_contexts()
+        self.graph.remove((None, None, None))
         self.assertEqual(len(self.graph), 0)
 
-    def testTriples(self):
+    def test_triples(self):
         tarek = self.tarek
         michel = self.michel
         bob = self.bob
@@ -220,78 +218,77 @@ class ContextTestCase(unittest.TestCase):
         graph = self.graph
         c1graph = Graph(self.graph.store, c1)
         c1triples = c1graph.triples
-        Any = None
 
-        self.addStuff()
+        self.add_stuff()
 
         # unbound subjects with context
-        self.assertEqual(len(list(c1triples((Any, likes, pizza)))), 2)
-        self.assertEqual(len(list(c1triples((Any, hates, pizza)))), 1)
-        self.assertEqual(len(list(c1triples((Any, likes, cheese)))), 3)
-        self.assertEqual(len(list(c1triples((Any, hates, cheese)))), 0)
+        self.assertEqual(len(list(c1triples((None, likes, pizza)))), 2)
+        self.assertEqual(len(list(c1triples((None, hates, pizza)))), 1)
+        self.assertEqual(len(list(c1triples((None, likes, cheese)))), 3)
+        self.assertEqual(len(list(c1triples((None, hates, cheese)))), 0)
 
         # unbound subjects without context, same results!
-        self.assertEqual(len(list(triples((Any, likes, pizza)))), 2)
-        self.assertEqual(len(list(triples((Any, hates, pizza)))), 1)
-        self.assertEqual(len(list(triples((Any, likes, cheese)))), 3)
-        self.assertEqual(len(list(triples((Any, hates, cheese)))), 0)
+        self.assertEqual(len(list(triples((None, likes, pizza)))), 2)
+        self.assertEqual(len(list(triples((None, hates, pizza)))), 1)
+        self.assertEqual(len(list(triples((None, likes, cheese)))), 3)
+        self.assertEqual(len(list(triples((None, hates, cheese)))), 0)
 
         # unbound objects with context
-        self.assertEqual(len(list(c1triples((michel, likes, Any)))), 2)
-        self.assertEqual(len(list(c1triples((tarek, likes, Any)))), 2)
-        self.assertEqual(len(list(c1triples((bob, hates, Any)))), 2)
-        self.assertEqual(len(list(c1triples((bob, likes, Any)))), 1)
+        self.assertEqual(len(list(c1triples((michel, likes, None)))), 2)
+        self.assertEqual(len(list(c1triples((tarek, likes, None)))), 2)
+        self.assertEqual(len(list(c1triples((bob, hates, None)))), 2)
+        self.assertEqual(len(list(c1triples((bob, likes, None)))), 1)
 
         # unbound objects without context, same results!
-        self.assertEqual(len(list(triples((michel, likes, Any)))), 2)
-        self.assertEqual(len(list(triples((tarek, likes, Any)))), 2)
-        self.assertEqual(len(list(triples((bob, hates, Any)))), 2)
-        self.assertEqual(len(list(triples((bob, likes, Any)))), 1)
+        self.assertEqual(len(list(triples((michel, likes, None)))), 2)
+        self.assertEqual(len(list(triples((tarek, likes, None)))), 2)
+        self.assertEqual(len(list(triples((bob, hates, None)))), 2)
+        self.assertEqual(len(list(triples((bob, likes, None)))), 1)
 
         # unbound predicates with context
-        self.assertEqual(len(list(c1triples((michel, Any, cheese)))), 1)
-        self.assertEqual(len(list(c1triples((tarek, Any, cheese)))), 1)
-        self.assertEqual(len(list(c1triples((bob, Any, pizza)))), 1)
-        self.assertEqual(len(list(c1triples((bob, Any, michel)))), 1)
+        self.assertEqual(len(list(c1triples((michel, None, cheese)))), 1)
+        self.assertEqual(len(list(c1triples((tarek, None, cheese)))), 1)
+        self.assertEqual(len(list(c1triples((bob, None, pizza)))), 1)
+        self.assertEqual(len(list(c1triples((bob, None, michel)))), 1)
 
         # unbound predicates without context, same results!
-        self.assertEqual(len(list(triples((michel, Any, cheese)))), 1)
-        self.assertEqual(len(list(triples((tarek, Any, cheese)))), 1)
-        self.assertEqual(len(list(triples((bob, Any, pizza)))), 1)
-        self.assertEqual(len(list(triples((bob, Any, michel)))), 1)
+        self.assertEqual(len(list(triples((michel, None, cheese)))), 1)
+        self.assertEqual(len(list(triples((tarek, None, cheese)))), 1)
+        self.assertEqual(len(list(triples((bob, None, pizza)))), 1)
+        self.assertEqual(len(list(triples((bob, None, michel)))), 1)
 
         # unbound subject, objects with context
-        self.assertEqual(len(list(c1triples((Any, hates, Any)))), 2)
-        self.assertEqual(len(list(c1triples((Any, likes, Any)))), 5)
+        self.assertEqual(len(list(c1triples((None, hates, None)))), 2)
+        self.assertEqual(len(list(c1triples((None, likes, None)))), 5)
 
         # unbound subject, objects without context, same results!
-        self.assertEqual(len(list(triples((Any, hates, Any)))), 2)
-        self.assertEqual(len(list(triples((Any, likes, Any)))), 5)
+        self.assertEqual(len(list(triples((None, hates, None)))), 2)
+        self.assertEqual(len(list(triples((None, likes, None)))), 5)
 
         # unbound predicates, objects with context
-        self.assertEqual(len(list(c1triples((michel, Any, Any)))), 2)
-        self.assertEqual(len(list(c1triples((bob, Any, Any)))), 3)
-        self.assertEqual(len(list(c1triples((tarek, Any, Any)))), 2)
+        self.assertEqual(len(list(c1triples((michel, None, None)))), 2)
+        self.assertEqual(len(list(c1triples((bob, None, None)))), 3)
+        self.assertEqual(len(list(c1triples((tarek, None, None)))), 2)
 
         # unbound predicates, objects without context, same results!
-        self.assertEqual(len(list(triples((michel, Any, Any)))), 2)
-        self.assertEqual(len(list(triples((bob, Any, Any)))), 3)
-        self.assertEqual(len(list(triples((tarek, Any, Any)))), 2)
+        self.assertEqual(len(list(triples((michel, None, None)))), 2)
+        self.assertEqual(len(list(triples((bob, None, None)))), 3)
+        self.assertEqual(len(list(triples((tarek, None, None)))), 2)
 
         # unbound subjects, predicates with context
-        self.assertEqual(len(list(c1triples((Any, Any, pizza)))), 3)
-        self.assertEqual(len(list(c1triples((Any, Any, cheese)))), 3)
-        self.assertEqual(len(list(c1triples((Any, Any, michel)))), 1)
+        self.assertEqual(len(list(c1triples((None, None, pizza)))), 3)
+        self.assertEqual(len(list(c1triples((None, None, cheese)))), 3)
+        self.assertEqual(len(list(c1triples((None, None, michel)))), 1)
 
         # unbound subjects, predicates without context, same results!
-        self.assertEqual(len(list(triples((Any, Any, pizza)))), 3)
-        self.assertEqual(len(list(triples((Any, Any, cheese)))), 3)
-        self.assertEqual(len(list(triples((Any, Any, michel)))), 1)
+        self.assertEqual(len(list(triples((None, None, pizza)))), 3)
+        self.assertEqual(len(list(triples((None, None, cheese)))), 3)
+        self.assertEqual(len(list(triples((None, None, michel)))), 1)
 
         # all unbound with context
-        self.assertEqual(len(list(c1triples((Any, Any, Any)))), 7)
+        self.assertEqual(len(list(c1triples((None, None, None)))), 7)
         # all unbound without context, same result!
-        self.assertEqual(len(list(triples((Any, Any, Any)))), 7)
+        self.assertEqual(len(list(triples((None, None, None)))), 7)
 
         for c in [graph, self.graph.get_context(c1)]:
             # unbound subjects
@@ -340,9 +337,9 @@ class ContextTestCase(unittest.TestCase):
             )
 
         # remove stuff and make sure the graph is empty again
-        self.removeStuff()
-        self.assertEqual(len(list(c1triples((Any, Any, Any)))), 0)
-        self.assertEqual(len(list(triples((Any, Any, Any)))), 0)
+        self.remove_stuff()
+        self.assertEqual(len(list(c1triples((None, None, None)))), 0)
+        self.assertEqual(len(list(triples((None, None, None)))), 0)
 
 
 if __name__ == "__main__":

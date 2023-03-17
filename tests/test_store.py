@@ -1,5 +1,5 @@
-import os
 import unittest
+from pathlib import Path
 
 from rdflib import RDF, XSD, BNode, ConjunctiveGraph, Graph, Literal, Namespace
 
@@ -19,14 +19,14 @@ class StoreTestCase(unittest.TestCase):
         self._fill_graph(g)
         g.close()
         del g
-        self.assertTrue(os.path.exists("test_store"))
+        self.assertTrue(Path("test_store").exists())
 
         g = ConjunctiveGraph("Oxigraph")
         g.open("test_store")
         self._test_graph(g)
         g.close()
         g.destroy("test_store")
-        self.assertFalse(os.path.exists("test_store"))
+        self.assertFalse(Path("test_store").exists())
 
     def test_store_with_late_open(self):
         g = ConjunctiveGraph("Oxigraph")
