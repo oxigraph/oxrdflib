@@ -1,5 +1,4 @@
-"""
-Graph test.
+"""Graph test.
 
 Code from https://github.com/RDFLib/rdflib/blob/91037207580838e41c07eb457bd65d7cc6d6ed85/test/test_graph.py
 
@@ -52,7 +51,7 @@ class GraphTestCase(unittest.TestCase):
         self.pizza = URIRef("urn:pizza")
         self.cheese = URIRef("urn:cheese")
 
-    def addStuff(self):
+    def add_stuff(self):
         tarek = self.tarek
         michel = self.michel
         bob = self.bob
@@ -69,7 +68,7 @@ class GraphTestCase(unittest.TestCase):
         self.graph.add((bob, hates, pizza))
         self.graph.add((bob, hates, michel))
 
-    def removeStuff(self):
+    def remove_stuff(self):
         tarek = self.tarek
         michel = self.michel
         bob = self.bob
@@ -86,14 +85,14 @@ class GraphTestCase(unittest.TestCase):
         self.graph.remove((bob, hates, pizza))
         self.graph.remove((bob, hates, michel))  # gasp!
 
-    def testAdd(self):
-        self.addStuff()
+    def test_add(self):
+        self.add_stuff()
 
-    def testRemove(self):
-        self.addStuff()
-        self.removeStuff()
+    def test_remove(self):
+        self.add_stuff()
+        self.remove_stuff()
 
-    def testTriples(self):
+    def test_triples(self):
         tarek = self.tarek
         michel = self.michel
         bob = self.bob
@@ -102,50 +101,49 @@ class GraphTestCase(unittest.TestCase):
         pizza = self.pizza
         cheese = self.cheese
         triples = self.graph.triples
-        Any = None
 
-        self.addStuff()
+        self.add_stuff()
 
         # unbound subjects
-        self.assertEqual(len(list(triples((Any, likes, pizza)))), 2)
-        self.assertEqual(len(list(triples((Any, hates, pizza)))), 1)
-        self.assertEqual(len(list(triples((Any, likes, cheese)))), 3)
-        self.assertEqual(len(list(triples((Any, hates, cheese)))), 0)
+        self.assertEqual(len(list(triples((None, likes, pizza)))), 2)
+        self.assertEqual(len(list(triples((None, hates, pizza)))), 1)
+        self.assertEqual(len(list(triples((None, likes, cheese)))), 3)
+        self.assertEqual(len(list(triples((None, hates, cheese)))), 0)
 
         # unbound objects
-        self.assertEqual(len(list(triples((michel, likes, Any)))), 2)
-        self.assertEqual(len(list(triples((tarek, likes, Any)))), 2)
-        self.assertEqual(len(list(triples((bob, hates, Any)))), 2)
-        self.assertEqual(len(list(triples((bob, likes, Any)))), 1)
+        self.assertEqual(len(list(triples((michel, likes, None)))), 2)
+        self.assertEqual(len(list(triples((tarek, likes, None)))), 2)
+        self.assertEqual(len(list(triples((bob, hates, None)))), 2)
+        self.assertEqual(len(list(triples((bob, likes, None)))), 1)
 
         # unbound predicates
-        self.assertEqual(len(list(triples((michel, Any, cheese)))), 1)
-        self.assertEqual(len(list(triples((tarek, Any, cheese)))), 1)
-        self.assertEqual(len(list(triples((bob, Any, pizza)))), 1)
-        self.assertEqual(len(list(triples((bob, Any, michel)))), 1)
+        self.assertEqual(len(list(triples((michel, None, cheese)))), 1)
+        self.assertEqual(len(list(triples((tarek, None, cheese)))), 1)
+        self.assertEqual(len(list(triples((bob, None, pizza)))), 1)
+        self.assertEqual(len(list(triples((bob, None, michel)))), 1)
 
         # unbound subject, objects
-        self.assertEqual(len(list(triples((Any, hates, Any)))), 2)
-        self.assertEqual(len(list(triples((Any, likes, Any)))), 5)
+        self.assertEqual(len(list(triples((None, hates, None)))), 2)
+        self.assertEqual(len(list(triples((None, likes, None)))), 5)
 
         # unbound predicates, objects
-        self.assertEqual(len(list(triples((michel, Any, Any)))), 2)
-        self.assertEqual(len(list(triples((bob, Any, Any)))), 3)
-        self.assertEqual(len(list(triples((tarek, Any, Any)))), 2)
+        self.assertEqual(len(list(triples((michel, None, None)))), 2)
+        self.assertEqual(len(list(triples((bob, None, None)))), 3)
+        self.assertEqual(len(list(triples((tarek, None, None)))), 2)
 
         # unbound subjects, predicates
-        self.assertEqual(len(list(triples((Any, Any, pizza)))), 3)
-        self.assertEqual(len(list(triples((Any, Any, cheese)))), 3)
-        self.assertEqual(len(list(triples((Any, Any, michel)))), 1)
+        self.assertEqual(len(list(triples((None, None, pizza)))), 3)
+        self.assertEqual(len(list(triples((None, None, cheese)))), 3)
+        self.assertEqual(len(list(triples((None, None, michel)))), 1)
 
         # all unbound
-        self.assertEqual(len(list(triples((Any, Any, Any)))), 7)
-        self.removeStuff()
-        self.assertEqual(len(list(triples((Any, Any, Any)))), 0)
+        self.assertEqual(len(list(triples((None, None, None)))), 7)
+        self.remove_stuff()
+        self.assertEqual(len(list(triples((None, None, None)))), 0)
 
-    def testConnected(self):
+    def test_connected(self):
         graph = self.graph
-        self.addStuff()
+        self.add_stuff()
         self.assertEqual(True, graph.connected())
 
         jeroen = URIRef("urn:jeroen")
@@ -155,7 +153,7 @@ class GraphTestCase(unittest.TestCase):
 
         self.assertEqual(False, graph.connected())
 
-    def testSub(self):
+    def test_sub(self):
         g1 = self.graph
         g2 = Graph(store=g1.store)
 
@@ -186,7 +184,7 @@ class GraphTestCase(unittest.TestCase):
 
         self.assertEqual((bob, likes, cheese) in g1, False)
 
-    def testGraphAdd(self):
+    def test_graph_add(self):
         g1 = self.graph
         g2 = Graph(store=g1.store)
 
@@ -216,7 +214,7 @@ class GraphTestCase(unittest.TestCase):
 
         self.assertEqual((bob, likes, cheese) in g1, True)
 
-    def testGraphIntersection(self):
+    def test_graph_intersection(self):
         g1 = self.graph
         g2 = Graph(store=g1.store)
 

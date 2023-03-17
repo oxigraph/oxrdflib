@@ -1,5 +1,4 @@
-"""
-Dataset test.
+"""Dataset test.
 
 Code from https://github.com/RDFLib/rdflib/blob/91037207580838e41c07eb457bd65d7cc6d6ed85/test/test_dataset.py
 
@@ -67,7 +66,7 @@ class DatasetTestCase(unittest.TestCase):
     def tearDown(self):
         self.graph.close()
 
-    def testGraphAware(self):
+    def test_graph_aware(self):
         if not self.graph.store.graph_aware:
             return
 
@@ -113,7 +112,7 @@ class DatasetTestCase(unittest.TestCase):
             {DATASET_DEFAULT_GRAPH_ID},
         )
 
-    def testDefaultGraph(self):
+    def test_default_graph(self):
         self.graph.add((self.tarek, self.likes, self.pizza))
         self.assertEqual(len(self.graph), 1)
         # only default exists
@@ -132,7 +131,7 @@ class DatasetTestCase(unittest.TestCase):
             {DATASET_DEFAULT_GRAPH_ID},
         )
 
-    def testNotUnion(self):
+    def test_not_union(self):
         g1 = self.graph.graph(self.c1)
         g1.add((self.tarek, self.likes, self.pizza))
 

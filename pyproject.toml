@@ -22,7 +22,7 @@ classifiers = [
 ]
 dependencies = [
     "pyoxigraph~=0.3.5",
-    "rdflib~=6.0"
+    "rdflib~=6.3"
 ]
 dynamic = ["version"]
 license = { text = "BSD-3-Clause" }
@@ -46,8 +46,31 @@ Tracker = "https://github.com/oxigraph/oxrdflib/issues"
 [tool.black]
 line-length = 120
 
-[tool.isort]
-profile = "black"
-line_length = 120
+[tool.ruff]
+line-length = 120
+target-version = "py37"
+select = [
+    "ARG",
+    "B",
+    "C40",
+    "C901",
+    "E",
+    "F",
+    "I",
+    "ICN",
+    "ISC",
+    "N",
+    "PIE",
+    "PTH",
+    "RET",
+    "RUF",
+    "SIM",
+    "T10",
+    "TCH",
+    "TID",
+    "UP",
+    "W",
+    "YTT"
+]
 
 [tool.setuptools_scm]
