@@ -67,6 +67,19 @@ If the `open` method is not called Oxigraph will automatically use a ramdisk on 
 
 To do anything else, use the usual rdflib python API.
 
+It is also possible to directly inject a [pyoxigraph `Store` object](https://pyoxigraph.readthedocs.io/en/stable/store.html#pyoxigraph.Store) directly into an Oxrdflib store:
+
+```python
+graph = rdflib.Graph(store=oxrdflib.OxigraphStore(store=pyoxigraph.Store("test_dir")))
+```
+
+This might be handy to e.g. open the database as read-only:
+
+```python
+graph = rdflib.Graph(store=oxrdflib.OxigraphStore(store=pyoxigraph.Store.read_only("test_dir")))
+```
+
+
 ## Differences with rdflib default store
 - relative IRIs are not supported by Oxigraph.
 - Just like the `SPARQLStore`, Oxigraph joins the `initBindings` parameter of the `query` method after the query has been evaluated, instead of injecting them at the beginning of the query.
