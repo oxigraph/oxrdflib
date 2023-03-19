@@ -72,9 +72,7 @@ class ContextTestCase(unittest.TestCase):
         graph.add((tarek, likes, cheese))
         graph.add((michel, likes, pizza))
         graph.add((michel, likes, cheese))
-        graph.add((bob, likes, cheese))
-        graph.add((bob, hates, pizza))
-        graph.add((bob, hates, michel))  # gasp!
+        self.graph.addN([(bob, likes, cheese, graph), (bob, hates, pizza, graph), (bob, hates, michel, graph)])
 
     def remove_stuff(self):
         tarek = self.tarek
