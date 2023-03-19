@@ -64,9 +64,9 @@ class GraphTestCase(unittest.TestCase):
         self.graph.add((tarek, likes, cheese))
         self.graph.add((michel, likes, pizza))
         self.graph.add((michel, likes, cheese))
-        self.graph.add((bob, likes, cheese))
-        self.graph.add((bob, hates, pizza))
-        self.graph.add((bob, hates, michel))
+        self.graph.addN(
+            [(bob, likes, cheese, self.graph), (bob, hates, pizza, self.graph), (bob, hates, michel, self.graph)]
+        )
 
     def remove_stuff(self):
         tarek = self.tarek

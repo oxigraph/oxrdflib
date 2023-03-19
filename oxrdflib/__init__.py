@@ -1,5 +1,5 @@
 import shutil
-from typing import Any, Dict, Generator, Iterator, Mapping, Optional, Tuple, Union
+from typing import Any, Dict, Generator, Iterable, Iterator, Mapping, Optional, Tuple, Union
 
 import pyoxigraph as ox
 from rdflib import Graph
@@ -12,7 +12,7 @@ from rdflib.term import BNode, Identifier, Literal, Node, URIRef, Variable
 __all__ = ["OxigraphStore"]
 
 _Triple = Tuple[Node, Node, Node]
-_Quad = Tuple[_Triple, Node]
+_Quad = Tuple[Node, Node, Node, Graph]
 _TriplePattern = Tuple[Optional[Node], Optional[Node], Optional[Node]]
 
 
@@ -63,6 +63,12 @@ class OxigraphStore(Store):
             raise ValueError("Oxigraph stores are not formula aware")
         self._inner.add(_to_ox(triple, context))
         super().add(triple, context, quoted)
+
+    def addN(self, quads: Iterable[_Quad]) -> None:  # noqa: N802
+        self._inner.extend([_to_ox(q) for q in quads])
+        for quad in quads:
+            (s, p, o, g) = quad
+            super().add((s, p, o), g)
 
     def remove(
         self,
