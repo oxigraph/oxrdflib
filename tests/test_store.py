@@ -1,7 +1,10 @@
 import unittest
 from pathlib import Path
 
+from pyoxigraph import Store
 from rdflib import RDF, XSD, BNode, ConjunctiveGraph, Graph, Literal, Namespace
+
+from oxrdflib import OxigraphStore
 
 EX = Namespace("http://example.com/")
 
@@ -34,7 +37,13 @@ class StoreTestCase(unittest.TestCase):
         with self.assertRaises(Exception) as _:
             g.open("test_store")
 
-    def _fill_graph(self, g: Graph):
+    def test_store_with_shared_backend(self):
+        store = Store()
+        self._fill_graph(Graph(store=OxigraphStore(store=store), identifier="http://example.com"))
+        self._test_graph(Graph(store=OxigraphStore(store=store), identifier="http://example.com"))
+
+    @staticmethod
+    def _fill_graph(g: Graph):
         g.add((EX.foo, RDF.type, EX.Entity))
         g.add((EX.foo, EX.prop, BNode("123")))
         g.add((EX.foo, EX.prop1, Literal("foo")))

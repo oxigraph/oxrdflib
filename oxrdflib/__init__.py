@@ -26,8 +26,10 @@ class OxigraphStore(Store):
         self,
         configuration: Optional[str] = None,
         identifier: Optional[Identifier] = None,
+        *,
+        store: Optional[ox.Store] = None,
     ):
-        self._store = None
+        self._store = store
         self._prefix_for_namespace: Dict[URIRef, str] = {}
         self._namespace_for_prefix: Dict[str, URIRef] = {}
         super().__init__(configuration, identifier)
