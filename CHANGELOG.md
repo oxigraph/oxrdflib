@@ -1,3 +1,14 @@
+## [0.3.3] - 2023-03-20
+
+### Added
+- Implements directly `Store.addN` method.
+- Allows to Allows to inject the `pyoxigraph.Store` object directly into `OxigraphStore`.
+
+### Changed
+- Migrates setuptools configuration to `pyproject.toml`.
+- Adds type annotation.
+
+
 ## [0.3.2] - 2022-08-03
 
 ### Changed
