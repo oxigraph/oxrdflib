@@ -107,7 +107,7 @@ class OxigraphStore(Store):
         queryGraph: str,  # noqa: N803
         **kwargs: Any,
     ) -> "Result":
-        if isinstance(queryGraph, Query) or kwargs:
+        if isinstance(query, Query) or kwargs:
             raise NotImplementedError
         init_ns = dict(self._namespace_for_prefix, **initNs)
         query = "".join(f"PREFIX {prefix}: <{namespace}>\n" for prefix, namespace in init_ns.items()) + query
