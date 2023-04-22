@@ -1,8 +1,14 @@
+## [0.3.4] - 2023-04-22
+
+### Changed
+- Fixes support of rdflib `Query` object in `Store.query`.
+
+
 ## [0.3.3] - 2023-03-20
 
 ### Added
 - Implements directly `Store.addN` method.
-- Allows to Allows to inject the `pyoxigraph.Store` object directly into `OxigraphStore`.
+- Allows to inject the `pyoxigraph.Store` object directly into `OxigraphStore`.
 
 ### Changed
 - Migrates setuptools configuration to `pyproject.toml`.
