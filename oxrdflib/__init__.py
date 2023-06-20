@@ -86,7 +86,13 @@ class OxigraphStore(Store):
         triple_pattern: _TriplePattern,
         context: Optional[Graph] = None,
     ) -> Iterator[Tuple[_Triple, Iterator[Optional[Graph]]]]:
-        return (_from_ox(q) for q in self._inner.quads_for_pattern(*_to_ox_quad_pattern(triple_pattern, context)))
+        return (
+            (
+                (_from_ox(q.subject), _from_ox(q.predicate), _from_ox(q.object)),
+                iter(((_from_ox_graph_name(q.graph_name, self) if q.graph_name != ox.DefaultGraph() else None),)),
+            )
+            for q in self._inner.quads_for_pattern(*_to_ox_quad_pattern(triple_pattern, context))
+        )
 
     def __len__(self, context: Optional[Graph] = None) -> int:
         if context is None:
@@ -96,8 +102,10 @@ class OxigraphStore(Store):
 
     def contexts(self, triple: Optional[_Triple] = None) -> Generator[Graph, None, None]:
         if triple is None:
-            return (_from_ox(g) for g in self._inner.named_graphs())
-        return (_from_ox(q[3]) for q in self._inner.quads_for_pattern(*_to_ox_quad_pattern(triple)))
+            return (_from_ox_graph_name(g, self) for g in self._inner.named_graphs())
+        return (
+            _from_ox_graph_name(q.graph_name, self) for q in self._inner.quads_for_pattern(*_to_ox_quad_pattern(triple))
+        )
 
     def query(
         self,
@@ -191,7 +199,9 @@ class OxigraphStore(Store):
         yield from self._namespace_for_prefix.items()
 
 
-def _to_ox(term: Union[Node, _Triple, _Quad, Graph], context: Optional[Graph] = None):
+def _to_ox(
+    term: Optional[Union[Node, _Triple, _Quad, Graph]], context: Optional[Graph] = None
+) -> Optional[Union[ox.NamedNode, ox.BlankNode, ox.Literal, ox.DefaultGraph, ox.Quad]]:
     if term is None:
         return None
     if term == DATASET_DEFAULT_GRAPH_ID:
@@ -209,7 +219,7 @@ def _to_ox(term: Union[Node, _Triple, _Quad, Graph], context: Optional[Graph] = 
             return ox.Quad(_to_ox(term[0]), _to_ox(term[1]), _to_ox(term[2]), _to_ox(context))
         if len(term) == 4:
             return ox.Quad(_to_ox(term[0]), _to_ox(term[1]), _to_ox(term[2]), _to_ox(term[3]))
-    raise ValueError(f"Unexpected rdflib term: {repr(term)}")
+    raise ValueError(f"Unexpected rdflib term: {term!r}")
 
 
 def _to_ox_quad_pattern(triple: _TriplePattern, context: Optional[Graph] = None):
@@ -217,7 +227,9 @@ def _to_ox_quad_pattern(triple: _TriplePattern, context: Optional[Graph] = None)
     return _to_ox_term_pattern(s), _to_ox_term_pattern(p), _to_ox_term_pattern(o), _to_ox_term_pattern(context)
 
 
-def _to_ox_term_pattern(term):
+def _to_ox_term_pattern(
+    term: Optional[Union[URIRef, BNode, Literal, Graph]]
+) -> Optional[Union[ox.NamedNode, ox.BlankNode, ox.Literal]]:
     if term is None:
         return None
     if isinstance(term, URIRef):
@@ -228,10 +240,22 @@ def _to_ox_term_pattern(term):
         return ox.Literal(term, language=term.language, datatype=ox.NamedNode(term.datatype) if term.datatype else None)
     if isinstance(term, Graph):
         return _to_ox(term.identifier)
-    raise ValueError(f"Unexpected rdflib term: {repr(term)}")
+    raise ValueError(f"Unexpected rdflib term: {term!r}")
 
 
-def _from_ox(term):
+def _from_ox_graph_name(graph_name: Union[ox.NamedNode, ox.BlankNode, ox.DefaultGraph], store: OxigraphStore) -> Graph:
+    if isinstance(graph_name, ox.NamedNode):
+        return Graph(identifier=URIRef(graph_name.value), store=store)
+    if isinstance(graph_name, ox.BlankNode):
+        return Graph(identifier=BNode(graph_name.value), store=store)
+    if isinstance(graph_name, ox.DefaultGraph):
+        return Graph(identifier=DATASET_DEFAULT_GRAPH_ID, store=store)
+    raise ValueError(f"Unexpected Oxigraph graph name: {graph_name!r}")
+
+
+def _from_ox(
+    term: Optional[Union[ox.NamedNode, ox.BlankNode, ox.Literal, ox.Triple]]
+) -> Optional[Union[Node, Tuple[Node, Node, Node]]]:
     if term is None:
         return None
     if isinstance(term, ox.NamedNode):
@@ -242,10 +266,6 @@ def _from_ox(term):
         if term.language:
             return Literal(term.value, lang=term.language)
         return Literal(term.value, datatype=URIRef(term.datatype.value))
-    if isinstance(term, ox.DefaultGraph):
-        return None
     if isinstance(term, ox.Triple):
         return _from_ox(term.subject), _from_ox(term.predicate), _from_ox(term.object)
-    if isinstance(term, ox.Quad):
-        return (_from_ox(term.subject), _from_ox(term.predicate), _from_ox(term.object)), _from_ox(term.graph_name)
-    raise ValueError(f"Unexpected Oxigraph term: {repr(term)}")
+    raise ValueError(f"Unexpected Oxigraph term: {term!r}")
