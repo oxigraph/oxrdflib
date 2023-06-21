@@ -1,3 +1,9 @@
+## [0.3.5] - 2023-06-21
+
+### Changed
+- Fixes `Store.triples` and `Store.context` return types.
+
+
 ## [0.3.4] - 2023-04-22
 
 ### Changed
