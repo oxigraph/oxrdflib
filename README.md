@@ -58,7 +58,7 @@ rdflib.Dataset()
 
 If you want to get the store data persisted on disk, use the `open` method on the `Graph` object (or `ConjunctiveGraph` or `Dataset`) with the directory where data should be persisted. For example:
 ```python
-graph = rdflib.Graph(store="Oxigraph")
+graph = rdflib.Graph(store="Oxigraph", identifier="http://example.com") # without identifier, some blank node will be used
 graph.open("test_dir")
 ```
 The store is closed with the `close()` method or automatically when Python garbage collector collects the store object.
