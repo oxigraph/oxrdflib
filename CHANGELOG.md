@@ -1,3 +1,9 @@
+## [0.3.6] - 2023-08-02
+
+### Added
+- Compatibility with rdflib 7.0
+
+
 ## [0.3.5] - 2023-06-21
 
 ### Changed
