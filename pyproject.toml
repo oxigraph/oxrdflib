@@ -22,7 +22,7 @@ classifiers = [
 ]
 dependencies = [
     "pyoxigraph~=0.3.14",
-    "rdflib~=6.3"
+    "rdflib>=6.3,<8.0"
 ]
 dynamic = ["version"]
 license = { text = "BSD-3-Clause" }
@@ -56,10 +56,12 @@ select = [
     "C901",
     "E",
     "F",
+    "FLY",
     "I",
     "ICN",
     "ISC",
     "N",
+    "PERF",
     "PIE",
     "PTH",
     "RET",
