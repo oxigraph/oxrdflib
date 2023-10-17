@@ -130,7 +130,7 @@ class ContextTestCase(unittest.TestCase):
         graph = Graph(self.graph.store, c1)
         old_len = len(self.graph)
 
-        for _ in range(0, 10):
+        for _ in range(10):
             graph.add((BNode(), self.hates, self.hates))
         self.assertEqual(len(graph), old_len + 10)
         self.assertEqual(len(self.graph.get_context(c1)), old_len + 10)
