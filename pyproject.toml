@@ -42,13 +42,8 @@ Homepage = "https://github.com/oxigraph/oxrdflib"
 Source = "https://github.com/oxigraph/oxrdflib"
 Tracker = "https://github.com/oxigraph/oxrdflib/issues"
 
-
-[tool.black]
-line-length = 120
-
 [tool.ruff]
 line-length = 120
-target-version = "py37"
 select = [
     "ARG",
     "B",
