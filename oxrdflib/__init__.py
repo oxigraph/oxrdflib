@@ -228,7 +228,7 @@ def _to_ox_quad_pattern(triple: _TriplePattern, context: Optional[Graph] = None)
 
 
 def _to_ox_term_pattern(
-    term: Optional[Union[URIRef, BNode, Literal, Graph]]
+    term: Optional[Union[URIRef, BNode, Literal, Graph]],
 ) -> Optional[Union[ox.NamedNode, ox.BlankNode, ox.Literal]]:
     if term is None:
         return None
@@ -254,7 +254,7 @@ def _from_ox_graph_name(graph_name: Union[ox.NamedNode, ox.BlankNode, ox.Default
 
 
 def _from_ox(
-    term: Optional[Union[ox.NamedNode, ox.BlankNode, ox.Literal, ox.Triple]]
+    term: Optional[Union[ox.NamedNode, ox.BlankNode, ox.Literal, ox.Triple]],
 ) -> Optional[Union[Node, Tuple[Node, Node, Node]]]:
     if term is None:
         return None

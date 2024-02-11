@@ -44,6 +44,8 @@ Tracker = "https://github.com/oxigraph/oxrdflib/issues"
 
 [tool.ruff]
 line-length = 120
+
+[tool.ruff.lint]
 select = [
     "ARG",
     "B",
