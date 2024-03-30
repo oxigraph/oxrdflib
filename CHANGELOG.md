@@ -1,3 +1,9 @@
+## [0.3.7] - 2024-03-30
+
+### Changed
+- Fixes JSON-LD serialization by allowing invalid triple patterns in the `Store.triple` function.
+
+
 ## [0.3.6] - 2023-08-02
 
 ### Added
