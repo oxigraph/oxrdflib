@@ -86,13 +86,16 @@ class OxigraphStore(Store):
         triple_pattern: _TriplePattern,
         context: Optional[Graph] = None,
     ) -> Iterator[Tuple[_Triple, Iterator[Optional[Graph]]]]:
-        return (
-            (
-                (_from_ox(q.subject), _from_ox(q.predicate), _from_ox(q.object)),
-                iter(((_from_ox_graph_name(q.graph_name, self) if q.graph_name != ox.DefaultGraph() else None),)),
+        try:
+            return (
+                (
+                    (_from_ox(q.subject), _from_ox(q.predicate), _from_ox(q.object)),
+                    iter(((_from_ox_graph_name(q.graph_name, self) if q.graph_name != ox.DefaultGraph() else None),)),
+                )
+                for q in self._inner.quads_for_pattern(*_to_ox_quad_pattern(triple_pattern, context))
             )
-            for q in self._inner.quads_for_pattern(*_to_ox_quad_pattern(triple_pattern, context))
-        )
+        except (TypeError, ValueError):
+            return iter(())  # We just don't return anything
 
     def __len__(self, context: Optional[Graph] = None) -> int:
         if context is None:

@@ -56,7 +56,6 @@ select = [
     "FLY",
     "I",
     "ICN",
-    "ISC",
     "N",
     "PERF",
     "PIE",

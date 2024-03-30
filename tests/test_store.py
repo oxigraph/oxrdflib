@@ -42,6 +42,14 @@ class StoreTestCase(unittest.TestCase):
         self._fill_graph(Graph(store=OxigraphStore(store=store), identifier="http://example.com"))
         self._test_graph(Graph(store=OxigraphStore(store=store), identifier="http://example.com"))
 
+    def test_json_serialization(self):
+        graph1 = Graph("Oxigraph", identifier=EX.graph)
+        graph1.add((EX.foo, EX.name, Literal("foo")))
+        json_ld = graph1.serialize(format="json-ld")
+        graph2 = Graph("Oxigraph", identifier=EX.graph)
+        graph2.parse(data=json_ld, format="json-ld")
+        self.assertEqual(graph1, graph2)
+
     @staticmethod
     def _fill_graph(g: Graph):
         g.add((EX.foo, RDF.type, EX.Entity))
