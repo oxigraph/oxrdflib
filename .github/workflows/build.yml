@@ -6,6 +6,8 @@ on:
       - main
   pull_request:
   release:
+    types:
+      - published
 
 jobs:
   lint:
@@ -61,5 +63,3 @@ jobs:
       - run: pip install build
       - run: python -m build --sdist --wheel --outdir dist/ .
       - uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          password: ${{ secrets.PYPI_PASSWORD }}
