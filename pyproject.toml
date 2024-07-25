@@ -4,9 +4,7 @@ build-backend = "setuptools.build_meta"
 
 
 [project]
-authors = [
-    { name = "Tpt", email = "thomas@pellissier-tanon.fr" },
-]
+authors = [{ name = "Tpt", email = "thomas@pellissier-tanon.fr" }]
 description = "rdflib stores based on pyoxigraph"
 classifiers = [
     "Programming Language :: Python",
@@ -18,12 +16,9 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "License :: OSI Approved :: BSD License",
     "Topic :: Software Development :: Libraries :: Python Modules",
-    "Topic :: Database :: Database Engines/Servers"
+    "Topic :: Database :: Database Engines/Servers",
 ]
-dependencies = [
-    "pyoxigraph~=0.3.14",
-    "rdflib>=6.3,<8.0"
-]
+dependencies = ["pyoxigraph~=0.3.14", "rdflib>=6.3,<8.0"]
 dynamic = ["version"]
 license = { text = "BSD-3-Clause" }
 name = "oxrdflib"
@@ -34,6 +29,14 @@ requires-python = ">=3.7"
 Oxigraph = "oxrdflib:OxigraphStore"
 OxMemory = "oxrdflib:OxigraphStore"
 OxSled = "oxrdflib:OxigraphStore"
+
+
+[project.entry-points."rdf.plugins.parser"]
+oxNTriple = "oxrdflib:OxNTripleParser"
+oxNQuads = "oxrdflib:OxNQuadsParser"
+oxTurtle = "oxrdflib:OxTurtleParser"
+oxTriG = "oxrdflib:OxTriGParser"
+oxRDF_XML = "oxrdflib:OxRDF_XMLParser"
 
 [project.urls]
 Changelog = "https://github.com/oxigraph/oxrdflib/blob/main/CHANGELOG.md"
@@ -68,7 +71,7 @@ select = [
     "TID",
     "UP",
     "W",
-    "YTT"
+    "YTT",
 ]
 
 [tool.setuptools_scm]

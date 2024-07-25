@@ -20,9 +20,15 @@ class OxParser(Parser):
         encoding: Optional[str] = "utf-8",
         **kwargs: Any,
     ) -> None:
+
         if encoding not in [None, "utf-8"]:
             raise ParserError(
                 "N3/Turtle files are always utf-8 encoded, I was passed: %s" % encoding
+            )
+
+        if type(source) not in [FileInputSource, InputSource]:
+            raise ParserError(
+                "Source must be either io(bytes) or io(str) or str or pathlib.Path"
             )
 
         baseURI = graph.absolutize(source.getPublicId() or source.getSystemId() or "")
@@ -100,4 +106,5 @@ class OxRDF_XMLParser(OxParser):
         encoding: Optional[str] = "utf-8",
         **kwargs: Any,
     ) -> None:
+
         super().parse(source, graph, format, encoding, **kwargs)
