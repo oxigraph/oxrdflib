@@ -1,17 +1,17 @@
-from .parsers import (
+from .parser import (
     OxNQuadsParser,
     OxNTripleParser,
-    OxRDF_XMLParser,
+    OxRDFXMLParser,
     OxTriGParser,
     OxTurtleParser,
 )
-from .stores import OxigraphStore
+from .store import OxigraphStore
 
 __all__ = [
     "OxigraphStore",
     "OxNQuadsParser",
     "OxNTripleParser",
-    "OxRDF_XMLParser",
+    "OxRDFXMLParser",
     "OxTriGParser",
     "OxTurtleParser",
 ]

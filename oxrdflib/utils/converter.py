@@ -5,10 +5,10 @@ from rdflib import Graph
 from rdflib.graph import DATASET_DEFAULT_GRAPH_ID
 from rdflib.term import BNode, Literal, Node, URIRef
 
-from oxrdflib._types import _Quad, _Triple, _TriplePattern
+from oxrdflib._type import _Quad, _Triple, _TriplePattern
 
 if TYPE_CHECKING:
-    from oxrdflib.stores import OxigraphStore
+    from oxrdflib.store import OxigraphStore
 
 
 def to_ox(
