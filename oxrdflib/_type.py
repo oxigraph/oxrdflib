@@ -11,8 +11,8 @@ _TriplePattern = Tuple[Optional[Node], Optional[Node], Optional[Node]]
 
 
 class RDFSerialization(Enum):
-    oxNTriple = "N-Triples"
-    oxNQuads = "N-Quads"
+    oxNTriple = "application/n-triples"
     oxTurtle = "text/turtle"
-    oxTriG = "application/trig"
     oxRDF_XML = "application/rdf+xml"
+    oxTriG = "application/trig"
+    oxNQuads = "application/n-quads"
