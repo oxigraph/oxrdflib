@@ -18,14 +18,13 @@ from rdflib.query import Result
 from rdflib.store import VALID_STORE, Store
 from rdflib.term import Identifier, Node, URIRef, Variable
 
-from ._types import _Triple, _Quad, _TriplePattern
+from ._types import _Quad, _Triple, _TriplePattern
 from .utils.converters import (
     from_ox,
     from_ox_graph_name,
     to_ox,
     to_ox_quad_pattern,
 )
-
 
 __all__ = ["OxigraphStore"]
 
@@ -48,13 +47,9 @@ class OxigraphStore(Store):
         self._namespace_for_prefix: Dict[str, URIRef] = {}
         super().__init__(configuration, identifier)
 
-    def open(
-        self, configuration: str, create: bool = False
-    ) -> Optional[int]:  # noqa: ARG002
+    def open(self, configuration: str, create: bool = False) -> Optional[int]:  # noqa: ARG002
         if self._store is not None:
-            raise ValueError(
-                "The open function should be called before any RDF operation"
-            )
+            raise ValueError("The open function should be called before any RDF operation")
         self._store = ox.Store(configuration)
         return VALID_STORE
 
@@ -108,19 +103,9 @@ class OxigraphStore(Store):
             return (
                 (
                     (from_ox(q.subject), from_ox(q.predicate), from_ox(q.object)),
-                    iter(
-                        (
-                            (
-                                from_ox_graph_name(q.graph_name, self)
-                                if q.graph_name != ox.DefaultGraph()
-                                else None
-                            ),
-                        )
-                    ),
+                    iter(((from_ox_graph_name(q.graph_name, self) if q.graph_name != ox.DefaultGraph() else None),)),
                 )
-                for q in self._inner.quads_for_pattern(
-                    *to_ox_quad_pattern(triple_pattern, context)
-                )
+                for q in self._inner.quads_for_pattern(*to_ox_quad_pattern(triple_pattern, context))
             )
         except (TypeError, ValueError):
             return iter(())  # We just don't return anything
@@ -129,18 +114,13 @@ class OxigraphStore(Store):
         if context is None:
             # TODO: very bad
             return len({q.triple for q in self._inner})
-        return sum(
-            1 for _ in self._inner.quads_for_pattern(None, None, None, to_ox(context))
-        )
+        return sum(1 for _ in self._inner.quads_for_pattern(None, None, None, to_ox(context)))
 
-    def contexts(
-        self, triple: Optional[_Triple] = None
-    ) -> Generator[Graph, None, None]:
+    def contexts(self, triple: Optional[_Triple] = None) -> Generator[Graph, None, None]:
         if triple is None:
             return (from_ox_graph_name(g, self) for g in self._inner.named_graphs())
         return (
-            from_ox_graph_name(q.graph_name, self)
-            for q in self._inner.quads_for_pattern(*to_ox_quad_pattern(triple))
+            from_ox_graph_name(q.graph_name, self) for q in self._inner.quads_for_pattern(*to_ox_quad_pattern(triple))
         )
 
     def query(
@@ -154,13 +134,7 @@ class OxigraphStore(Store):
         if isinstance(query, Query) or kwargs:
             raise NotImplementedError
         init_ns = dict(self._namespace_for_prefix, **initNs)
-        query = (
-            "".join(
-                f"PREFIX {prefix}: <{namespace}>\n"
-                for prefix, namespace in init_ns.items()
-            )
-            + query
-        )
+        query = "".join(f"PREFIX {prefix}: <{namespace}>\n" for prefix, namespace in init_ns.items()) + query
         if initBindings:
             query += "\nVALUES ( {} ) {{ ({}) }}".format(
                 " ".join(f"?{k}" for k in initBindings),
@@ -177,10 +151,7 @@ class OxigraphStore(Store):
         elif isinstance(result, ox.QuerySolutions):
             out = Result("SELECT")
             out.vars = [Variable(v.value) for v in result.variables]
-            out.bindings = (
-                {v: from_ox(val) for v, val in zip(out.vars, solution)}
-                for solution in result
-            )
+            out.bindings = ({v: from_ox(val) for v, val in zip(out.vars, solution)} for solution in result)
         elif isinstance(result, ox.QueryTriples):
             out = Result("CONSTRUCT")
             out.graph = Graph()
@@ -214,10 +185,7 @@ class OxigraphStore(Store):
         self._inner.remove_graph(to_ox(graph))
 
     def bind(self, prefix: str, namespace: URIRef, override: bool = True) -> None:
-        if not override and (
-            prefix in self._namespace_for_prefix
-            or namespace in self._prefix_for_namespace
-        ):
+        if not override and (prefix in self._namespace_for_prefix or namespace in self._prefix_for_namespace):
             return  # nothing to do
         self._delete_from_prefix(prefix)
         self._delete_from_namespace(namespace)

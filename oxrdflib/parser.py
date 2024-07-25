@@ -1,11 +1,11 @@
 from typing import Any, Optional
+
 from rdflib import Graph
-from rdflib.parser import FileInputSource, InputSource, Parser
 from rdflib.exceptions import ParserError
+from rdflib.parser import FileInputSource, InputSource, Parser
 
-from .utils.converters import to_ox
-
-from ._types import RDFSerialization
+from ._type import RDFSerialization
+from .utils.converter import to_ox
 
 
 class OxParser(Parser):
@@ -20,31 +20,26 @@ class OxParser(Parser):
         encoding: Optional[str] = "utf-8",
         **kwargs: Any,
     ) -> None:
-
         if encoding not in [None, "utf-8"]:
-            raise ParserError(
-                "N3/Turtle files are always utf-8 encoded, I was passed: %s" % encoding
-            )
+            raise ParserError("N3/Turtle files are always utf-8 encoded, I was passed: %s" % encoding)
 
         if type(source) not in [FileInputSource, InputSource]:
-            raise ParserError(
-                "Source must be either io(bytes) or io(str) or str or pathlib.Path"
-            )
+            raise ParserError("Source must be either io(bytes) or io(str) or str or pathlib.Path")
 
-        baseURI = graph.absolutize(source.getPublicId() or source.getSystemId() or "")
+        base_iri = graph.absolutize(source.getPublicId() or source.getSystemId() or "")
 
         if kwargs.get("transactional", False):
             graph.store._store.load(
                 source.file,
                 format,
-                base_iri=baseURI,
+                base_iri=base_iri,
                 to_graph=to_ox(graph.identifier),
             )
         else:
             graph.store._store.bulk_load(
                 source.file,
                 format,
-                base_iri=baseURI,
+                base_iri=base_iri,
                 to_graph=to_ox(graph.identifier),
             )
 
@@ -54,7 +49,7 @@ class OxTurtleParser(OxParser):
         self,
         source: InputSource,
         graph: Graph,
-        format: Optional[str] = RDFSerialization.oxTurtle.value,
+        format: str = RDFSerialization.OxTurtle.value,
         encoding: Optional[str] = "utf-8",
         **kwargs: Any,
     ) -> None:
@@ -66,7 +61,7 @@ class OxNTripleParser(OxParser):
         self,
         source: InputSource,
         graph: Graph,
-        format: Optional[str] = RDFSerialization.oxNTriple.value,
+        format: str = RDFSerialization.OxNTriple.value,
         encoding: Optional[str] = "utf-8",
         **kwargs: Any,
     ) -> None:
@@ -78,7 +73,7 @@ class OxNQuadsParser(OxParser):
         self,
         source: InputSource,
         graph: Graph,
-        format: Optional[str] = RDFSerialization.oxNQuads.value,
+        format: str = RDFSerialization.OxNQuads.value,
         encoding: Optional[str] = "utf-8",
         **kwargs: Any,
     ) -> None:
@@ -90,21 +85,20 @@ class OxTriGParser(OxParser):
         self,
         source: InputSource,
         graph: Graph,
-        format: Optional[str] = RDFSerialization.oxTriG.value,
+        format: str = RDFSerialization.OxTriG.value,
         encoding: Optional[str] = "utf-8",
         **kwargs: Any,
     ) -> None:
         super().parse(source, graph, format, encoding, **kwargs)
 
 
-class OxRDF_XMLParser(OxParser):
+class OxRDFXMLParser(OxParser):
     def parse(
         self,
         source: FileInputSource,
         graph: Graph,
-        format: Optional[str] = RDFSerialization.oxRDF_XML.value,
+        format: str = RDFSerialization.OxRDFXML.value,
         encoding: Optional[str] = "utf-8",
         **kwargs: Any,
     ) -> None:
-
         super().parse(source, graph, format, encoding, **kwargs)

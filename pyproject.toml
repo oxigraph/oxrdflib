@@ -32,11 +32,11 @@ OxSled = "oxrdflib:OxigraphStore"
 
 
 [project.entry-points."rdf.plugins.parser"]
-oxNTriple = "oxrdflib:OxNTripleParser"
-oxNQuads = "oxrdflib:OxNQuadsParser"
-oxTurtle = "oxrdflib:OxTurtleParser"
-oxTriG = "oxrdflib:OxTriGParser"
-oxRDF_XML = "oxrdflib:OxRDF_XMLParser"
+OxNTriple = "oxrdflib:OxNTripleParser"
+OxNQuads = "oxrdflib:OxNQuadsParser"
+OxTurtle = "oxrdflib:OxTurtleParser"
+OxTriG = "oxrdflib:OxTriGParser"
+OxRDFXML = "oxrdflib:OxRDFXMLParser"
 
 [project.urls]
 Changelog = "https://github.com/oxigraph/oxrdflib/blob/main/CHANGELOG.md"

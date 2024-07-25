@@ -1,4 +1,3 @@
-from .stores import OxigraphStore
 from .parsers import (
     OxNQuadsParser,
     OxNTripleParser,
@@ -6,7 +5,7 @@ from .parsers import (
     OxTriGParser,
     OxTurtleParser,
 )
-
+from .stores import OxigraphStore
 
 __all__ = [
     "OxigraphStore",

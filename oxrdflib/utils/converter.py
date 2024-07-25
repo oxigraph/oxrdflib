@@ -1,11 +1,11 @@
-from typing import Optional, Tuple, Union, TYPE_CHECKING
-from oxrdflib._types import _Triple, _Quad, _TriplePattern
+from typing import TYPE_CHECKING, Optional, Tuple, Union
 
 import pyoxigraph as ox
 from rdflib import Graph
 from rdflib.graph import DATASET_DEFAULT_GRAPH_ID
 from rdflib.term import BNode, Literal, Node, URIRef
 
+from oxrdflib._types import _Quad, _Triple, _TriplePattern
 
 if TYPE_CHECKING:
     from oxrdflib.stores import OxigraphStore
