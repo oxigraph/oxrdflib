@@ -62,7 +62,7 @@ class OxNTripleParser(OxParser):
         source: InputSource,
         graph: Graph,
         format: str = RDFSerialization.OxNTriple.value,
-        encoding: Optional[str] = "utf-8",
+        encoding: Optional[str] = None,
         **kwargs: Any,
     ) -> None:
         super().parse(source, graph, format, encoding, **kwargs)
@@ -74,7 +74,7 @@ class OxRDFXMLParser(OxParser):
         source: FileInputSource,
         graph: Graph,
         format: str = RDFSerialization.OxRDFXML.value,
-        encoding: Optional[str] = "utf-8",
+        encoding: Optional[str] = None,
         **kwargs: Any,
     ) -> None:
         super().parse(source, graph, format, encoding, **kwargs)
@@ -86,7 +86,7 @@ class OxNQuadsParser(OxParser):
         source: InputSource,
         graph: Graph,
         format: str = RDFSerialization.OxNQuads.value,
-        encoding: Optional[str] = "utf-8",
+        encoding: Optional[str] = None,
         **kwargs: Any,
     ) -> None:
         super().parse(source, graph, format, encoding, **kwargs)
