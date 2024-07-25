@@ -68,6 +68,18 @@ class OxNTripleParser(OxParser):
         super().parse(source, graph, format, encoding, **kwargs)
 
 
+class OxRDFXMLParser(OxParser):
+    def parse(
+        self,
+        source: FileInputSource,
+        graph: Graph,
+        format: str = RDFSerialization.OxRDFXML.value,
+        encoding: Optional[str] = "utf-8",
+        **kwargs: Any,
+    ) -> None:
+        super().parse(source, graph, format, encoding, **kwargs)
+
+
 class OxNQuadsParser(OxParser):
     def parse(
         self,
@@ -86,18 +98,6 @@ class OxTriGParser(OxParser):
         source: InputSource,
         graph: Graph,
         format: str = RDFSerialization.OxTriG.value,
-        encoding: Optional[str] = "utf-8",
-        **kwargs: Any,
-    ) -> None:
-        super().parse(source, graph, format, encoding, **kwargs)
-
-
-class OxRDFXMLParser(OxParser):
-    def parse(
-        self,
-        source: FileInputSource,
-        graph: Graph,
-        format: str = RDFSerialization.OxRDFXML.value,
         encoding: Optional[str] = "utf-8",
         **kwargs: Any,
     ) -> None:
