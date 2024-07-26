@@ -4,10 +4,7 @@ build-backend = "setuptools.build_meta"
 
 
 [project]
-authors = [
-    { name = "Tpt", email = "thomas@pellissier-tanon.fr" },
-    { name = "Nikola Vasiljevic", email = "me@thisisnikola.com" },
-]
+authors = [{ name = "Tpt", email = "thomas@pellissier-tanon.fr" }]
 description = "rdflib stores based on pyoxigraph"
 classifiers = [
     "Programming Language :: Python",
