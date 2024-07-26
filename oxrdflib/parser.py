@@ -101,7 +101,7 @@ class OxNQuadsParser(OxParser):
         encoding: Optional[str] = None,
         **kwargs: Any,
     ) -> None:
-        raise NotImplementedError("TriG is not supported yet")
+        raise NotImplementedError("N-Quads is not supported yet")
 
 
 class OxTriGParser(OxParser):
@@ -113,4 +113,4 @@ class OxTriGParser(OxParser):
         encoding: Optional[str] = "utf-8",
         **kwargs: Any,
     ) -> None:
-        raise NotImplementedError("TriG is not supported yet")
+        raise NotImplementedError("TriG parser is not supported yet")
