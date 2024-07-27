@@ -43,7 +43,6 @@ class OxigraphParser(Parser):
             sink.parse(source, format=format)
 
         else:
-            print("here")
             base_iri = sink.absolutize(source.getPublicId() or source.getSystemId() or "")
 
             if kwargs.get("transactional", False):
