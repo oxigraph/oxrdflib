@@ -40,24 +40,25 @@ class OxigraphParser(Parser):
                 " Attempting to parse using rdflib native parser.",
                 stacklevel=2,
             )
-            sink.parse(source, format=format, encoding=encoding, **kwargs)
+            sink.parse(source)
 
-        base_iri = sink.absolutize(source.getPublicId() or source.getSystemId() or "")
-
-        if kwargs.get("transactional", False):
-            sink.store._inner.load(
-                source.file,
-                format,
-                base_iri=base_iri,
-                to_graph=to_ox(sink.identifier),
-            )
         else:
-            sink.store._inner.bulk_load(
-                source.file,
-                format,
-                base_iri=base_iri,
-                to_graph=to_ox(sink.identifier),
-            )
+            base_iri = sink.absolutize(source.getPublicId() or source.getSystemId() or "")
+
+            if kwargs.get("transactional", False):
+                sink.store._inner.load(
+                    source.file,
+                    format,
+                    base_iri=base_iri,
+                    to_graph=to_ox(sink.identifier),
+                )
+            else:
+                sink.store._inner.bulk_load(
+                    source.file,
+                    format,
+                    base_iri=base_iri,
+                    to_graph=to_ox(sink.identifier),
+                )
 
 
 class OxigraphTurtleParser(OxigraphParser):
