@@ -1,10 +1,10 @@
+import warnings
 from typing import Any, Optional, Union
 
 from rdflib import ConjunctiveGraph, Graph
 from rdflib.exceptions import ParserError
 from rdflib.parser import FileInputSource, InputSource, Parser
 
-from oxrdflib._type import get_mime_type
 from oxrdflib.store import OxigraphStore
 from oxrdflib.utils.converter import to_ox
 
@@ -27,16 +27,20 @@ class OxigraphParser(Parser):
         encoding: Optional[str] = "utf-8",
         **kwargs: Any,
     ) -> None:
-        if encoding not in [None, "utf-8"]:
+        if encoding not in (None, "utf-8"):
             raise ParserError("N3/Turtle files are always utf-8 encoded, I was passed: %s" % encoding)
 
         if type(source) not in (FileInputSource, InputSource):
             raise ParserError("Source must be either io(bytes) or io(str) or str or pathlib.Path")
 
         if not isinstance(sink.store, OxigraphStore):
-            raise ParserError(
-                "Sink store must be instance of OxigraphStore, " f"got {sink.store.__class__.__name__} store instead"
+            warnings.warn(
+                "Graph store should be an instance of OxigraphStore, "
+                f"got {type(sink.store).__name__} store instead."
+                " Attempting to parse using rdflib native parser.",
+                stacklevel=2,
             )
+            sink.parse(source, format=format, encoding=encoding, **kwargs)
 
         base_iri = sink.absolutize(source.getPublicId() or source.getSystemId() or "")
 
@@ -61,7 +65,7 @@ class OxigraphTurtleParser(OxigraphParser):
         self,
         source: InputSource,
         sink: Graph,
-        format: str = get_mime_type("oxTurtle"),
+        format: str = "text/turtle",
         encoding: Optional[str] = "utf-8",
         **kwargs: Any,
     ) -> None:
@@ -73,7 +77,7 @@ class OxigraphNTriplesParser(OxigraphParser):
         self,
         source: InputSource,
         sink: Graph,
-        format: str = get_mime_type("oxNTriples"),
+        format: str = "application/n-triples",
         encoding: Optional[str] = None,
         **kwargs: Any,
     ) -> None:
@@ -85,7 +89,7 @@ class OxigraphRdfXmlParser(OxigraphParser):
         self,
         source: FileInputSource,
         sink: Graph,
-        format: str = get_mime_type("oxRdfXml"),
+        format: str = "application/rdf+xml",
         encoding: Optional[str] = None,
         **kwargs: Any,
     ) -> None:
@@ -97,7 +101,7 @@ class OxigraphNQuadsParser(OxigraphParser):
         self,
         source: InputSource,
         sink: ConjunctiveGraph,
-        format: str = get_mime_type("oxNQuads"),
+        format: str = "application/n-quads",
         encoding: Optional[str] = None,
         **kwargs: Any,
     ) -> None:
@@ -109,7 +113,7 @@ class OxigraphTriGParser(OxigraphParser):
         self,
         source: InputSource,
         sink: Graph,
-        format: str = get_mime_type("oxTriG"),
+        format: str = "application/trig",
         encoding: Optional[str] = "utf-8",
         **kwargs: Any,
     ) -> None:
