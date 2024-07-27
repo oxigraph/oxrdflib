@@ -18,13 +18,13 @@ from rdflib.query import Result
 from rdflib.store import VALID_STORE, Store
 from rdflib.term import Identifier, Node, URIRef, Variable
 
-from ._type import _Quad, _Triple, _TriplePattern
-from .utils.converter import (
+from ._converter import (
     from_ox,
     from_ox_graph_name,
     to_ox,
     to_ox_quad_pattern,
 )
+from ._type import _Quad, _Triple, _TriplePattern
 
 __all__ = ["OxigraphStore"]
 

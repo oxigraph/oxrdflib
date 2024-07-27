@@ -5,8 +5,8 @@ from rdflib import ConjunctiveGraph, Graph
 from rdflib.exceptions import ParserError
 from rdflib.parser import FileInputSource, InputSource, Parser
 
+from oxrdflib._converter import to_ox
 from oxrdflib.store import OxigraphStore
-from oxrdflib.utils.converter import to_ox
 
 __all__ = [
     "OxigraphTurtleParser",
