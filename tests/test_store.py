@@ -4,7 +4,7 @@ from pathlib import Path
 from pyoxigraph import Store
 from rdflib import RDF, XSD, BNode, ConjunctiveGraph, Graph, Literal, Namespace
 
-from oxrdflib.store import OxigraphStore
+from oxrdflib import OxigraphStore
 
 EX = Namespace("http://example.com/")
 

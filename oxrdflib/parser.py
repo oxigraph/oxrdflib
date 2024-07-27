@@ -9,13 +9,13 @@ from oxrdflib.store import OxigraphStore
 from oxrdflib.utils.converter import to_ox
 
 __all__ = [
-    "OxTurtleParser",
-    "OxNTriplesParser",
-    "OxRdfXmlParser",
+    "OxigraphTurtleParser",
+    "OxigraphNTriplesParser",
+    "OxigraphRdfXmlParser",
 ]
 
 
-class OxParser(Parser):
+class OxigraphParser(Parser):
     def __init__(self):
         pass
 
@@ -30,7 +30,7 @@ class OxParser(Parser):
         if encoding not in [None, "utf-8"]:
             raise ParserError("N3/Turtle files are always utf-8 encoded, I was passed: %s" % encoding)
 
-        if type(source) not in [FileInputSource, InputSource]:
+        if type(source) not in (FileInputSource, InputSource):
             raise ParserError("Source must be either io(bytes) or io(str) or str or pathlib.Path")
 
         if not isinstance(sink.store, OxigraphStore):
@@ -56,7 +56,7 @@ class OxParser(Parser):
             )
 
 
-class OxTurtleParser(OxParser):
+class OxigraphTurtleParser(OxigraphParser):
     def parse(
         self,
         source: InputSource,
@@ -68,7 +68,7 @@ class OxTurtleParser(OxParser):
         super().parse(source, sink, format, encoding, **kwargs)
 
 
-class OxNTriplesParser(OxParser):
+class OxigraphNTriplesParser(OxigraphParser):
     def parse(
         self,
         source: InputSource,
@@ -80,7 +80,7 @@ class OxNTriplesParser(OxParser):
         super().parse(source, sink, format, encoding, **kwargs)
 
 
-class OxRdfXmlParser(OxParser):
+class OxigraphRdfXmlParser(OxigraphParser):
     def parse(
         self,
         source: FileInputSource,
@@ -92,7 +92,7 @@ class OxRdfXmlParser(OxParser):
         super().parse(source, sink, format, encoding, **kwargs)
 
 
-class OxNQuadsParser(OxParser):
+class OxigraphNQuadsParser(OxigraphParser):
     def parse(
         self,
         source: InputSource,
@@ -104,7 +104,7 @@ class OxNQuadsParser(OxParser):
         raise NotImplementedError("N-Quads is not supported yet")
 
 
-class OxTriGParser(OxParser):
+class OxigraphTriGParser(OxigraphParser):
     def parse(
         self,
         source: InputSource,

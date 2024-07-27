@@ -25,6 +25,7 @@ name = "oxrdflib"
 readme = "README.md"
 requires-python = ">=3.7"
 
+
 [project.entry-points."rdf.plugins.store"]
 Oxigraph = "oxrdflib.store:OxigraphStore"
 OxMemory = "oxrdflib.store:OxigraphStore"
@@ -32,9 +33,10 @@ OxSled = "oxrdflib.store:OxigraphStore"
 
 
 [project.entry-points."rdf.plugins.parser"]
-oxNTriples = "oxrdflib.parser:OxNTriplesParser"
-oxTurtle = "oxrdflib.parser:OxTurtleParser"
-oxRdfXml = "oxrdflib.parser:OxRdfXmlParser"
+oxNTriples = "oxrdflib.parser:OxigraphNTriplesParser"
+oxTurtle = "oxrdflib.parser:OxigraphTurtleParser"
+oxRdfXml = "oxrdflib.parser:OxigraphRdfXmlParser"
+
 
 [project.urls]
 Changelog = "https://github.com/oxigraph/oxrdflib/blob/main/CHANGELOG.md"
