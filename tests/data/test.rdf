@@ -2,10 +2,10 @@
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
     xmlns:foaf="http://xmlns.com/foaf/0.1/">
 
-    <foaf:Document rdf:about="http://example.org/stuff/1.0/document">
+    <foaf:Document rdf:about="document">
         <foaf:title>Example Document</foaf:title>
         <foaf:creator>
-            <foaf:Person rdf:about="http://example.org/stuff/1.0/creator">
+            <foaf:Person rdf:about="creator">
                 <foaf:name>John Doe</foaf:name>
                 <foaf:mbox rdf:resource="mailto:johndoe@example.org" />
             </foaf:Person>

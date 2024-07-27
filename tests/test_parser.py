@@ -60,21 +60,36 @@ class TestGraphParsing(unittest.TestCase):
 
     def test_parsing_ox_rdfxml_bulk_load(self):
         graph = rdflib.Graph(store="Oxigraph")
-        graph.parse(_TEST_DIR / "data/test.rdf", format="ox-rdf/xml", transactional=False)
+        graph.parse(
+            _TEST_DIR / "data/test.rdf",
+            publicID="http://example.com/",
+            format="ox-rdf/xml",
+            transactional=False,
+        )
 
         self.assertEqual(len(graph), 6)
+        self.assertTrue(next(iter(graph))[0][0].startswith("http://example.com/"))
 
     def test_parsing_ox_rdfxml_load(self):
         graph = rdflib.Graph(store="Oxigraph")
-        graph.parse(_TEST_DIR / "data/test.rdf", format="ox-rdf/xml", transactional=True)
-        result = set(graph)
-
-        self.assertEqual(len(result), 6)
+        graph.parse(
+            _TEST_DIR / "data/test.rdf",
+            publicID="http://example.com/",
+            format="ox-rdf/xml",
+            transactional=True,
+        )
+        self.assertEqual(len(graph), 6)
+        self.assertTrue(next(iter(graph))[0][0].startswith("http://example.com/"))
 
     def test_parsing_ox_rdfxml_fallback(self):
         graph = rdflib.Graph()
         with warnings.catch_warnings(record=True) as warning:
-            graph.parse(_TEST_DIR / "data/test.rdf", format="ox-rdf/xml", transactional=False)
+            graph.parse(
+                _TEST_DIR / "data/test.rdf",
+                publicID="http://example.com/",
+                format="ox-rdf/xml",
+                transactional=False,
+            )
 
         self.assertEqual(
             warning[0].message.args[0],
