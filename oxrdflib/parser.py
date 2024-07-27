@@ -44,17 +44,18 @@ class OxigraphParser(Parser):
 
         else:
             base_iri = sink.absolutize(source.getPublicId() or source.getSystemId() or "")
+            input = source.file if isinstance(source, FileInputSource) else source.getByteStream()
 
             if kwargs.get("transactional", True):
                 sink.store._inner.load(
-                    source.getByteStream(),
+                    input,
                     format,
                     base_iri=base_iri,
                     to_graph=to_ox(sink.identifier),
                 )
             else:
                 sink.store._inner.bulk_load(
-                    source.getByteStream(),
+                    input,
                     format,
                     base_iri=base_iri,
                     to_graph=to_ox(sink.identifier),

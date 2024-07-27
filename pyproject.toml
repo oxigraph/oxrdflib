@@ -33,9 +33,9 @@ OxSled = "oxrdflib.store:OxigraphStore"
 
 
 [project.entry-points."rdf.plugins.parser"]
-oxNTriples = "oxrdflib.parser:OxigraphNTriplesParser"
-oxTurtle = "oxrdflib.parser:OxigraphTurtleParser"
-oxRdfXml = "oxrdflib.parser:OxigraphRdfXmlParser"
+ox-turtle = "oxrdflib.parser:OxigraphTurtleParser"
+ox-n3 = "oxrdflib.parser:OxigraphNTriplesParser"
+"ox-rdf/xml" = "oxrdflib.parser:OxigraphRdfXmlParser"
 
 
 [project.urls]

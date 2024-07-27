@@ -8,36 +8,22 @@ _TEST_DIR = Path(__file__).resolve().parent
 
 
 class TestGraphParsing(unittest.TestCase):
-    def setUp(self):
-        self.oxi_graph = rdflib.Graph(store="Oxigraph")
-        self.memory_graph = rdflib.Graph()
-
-    def remove_triples_from_oxi_graph(self):
-        self.oxi_graph.remove((None, None, None))
-
-    def remove_triples_from_memory_graph(self):
-        self.memory_graph.remove((None, None, None))
-
     def test_parsing_ox_turtle_bulk_load(self):
-        self.oxi_graph.parse(_TEST_DIR / "data/test.ttl", format="oxTurtle", transactional=False)
-        result = set(self.oxi_graph)
-        self.assertIsNotNone(result)
-        self.assertEqual(len(result), 6)
-        self.remove_triples_from_oxi_graph()
+        graph = rdflib.Graph(store="Oxigraph")
+        graph.parse(_TEST_DIR / "data/test.ttl", format="ox-turtle", transactional=False)
+        self.assertEqual(len(graph), 6)
 
     def test_parsing_ox_turtle_load(self):
-        self.oxi_graph.parse(_TEST_DIR / "data/test.ttl", format="oxTurtle", transactional=True)
-        result = set(self.oxi_graph)
-        self.assertIsNotNone(result)
-        self.assertEqual(len(result), 6)
-        self.remove_triples_from_oxi_graph()
+        graph = rdflib.Graph(store="Oxigraph")
+        graph.parse(_TEST_DIR / "data/test.ttl", format="ox-turtle", transactional=True)
+
+        self.assertEqual(len(graph), 6)
 
     def test_parsing_ox_turtle_fallback(self):
+        graph = rdflib.Graph()
         with warnings.catch_warnings(record=True) as warning:
-            self.memory_graph.parse(_TEST_DIR / "data/test.ttl", format="oxTurtle", transactional=False)
+            graph.parse(_TEST_DIR / "data/test.ttl", format="ox-turtle", transactional=False)
 
-        result = set(self.memory_graph)
-        self.assertIsNotNone(result)
         self.assertEqual(
             warning[0].message.args[0],
             (
@@ -45,41 +31,24 @@ class TestGraphParsing(unittest.TestCase):
                 " store instead. Attempting to parse using rdflib native parser."
             ),
         )
-        self.assertEqual(len(result), 6)
-        self.remove_triples_from_memory_graph()
+        self.assertEqual(len(graph), 6)
 
-    def test_parsing_ox_ntriples_bulk_load(self):
-        self.oxi_graph.parse(_TEST_DIR / "data/test.n3", format="oxNTriples", transactional=False)
-        result = set(self.oxi_graph)
-        self.assertIsNotNone(result)
-        self.assertEqual(len(result), 6)
-        self.remove_triples_from_oxi_graph()
+    def test_parsing_ox_n3_bulk_load(self):
+        graph = rdflib.Graph(store="Oxigraph")
+        graph.parse(_TEST_DIR / "data/test.n3", format="ox-n3", transactional=False)
+        self.assertEqual(len(graph), 6)
 
-        self.oxi_graph.parse(_TEST_DIR / "data/test.n3", format="oxNTriples", transactional=True)
-        result = set(self.oxi_graph)
-        self.assertIsNotNone(result)
-        self.assertEqual(len(result), 6)
-        self.remove_triples_from_oxi_graph()
+    def test_parsing_ox_n3_load(self):
+        graph = rdflib.Graph(store="Oxigraph")
+        graph.parse(_TEST_DIR / "data/test.n3", format="ox-n3", transactional=True)
 
-    def test_parsing_ox_ntriples_load(self):
-        self.oxi_graph.parse(_TEST_DIR / "data/test.n3", format="oxNTriples", transactional=True)
-        result = set(self.oxi_graph)
-        self.assertIsNotNone(result)
-        self.assertEqual(len(result), 6)
-        self.remove_triples_from_oxi_graph()
+        self.assertEqual(len(graph), 6)
 
-        self.oxi_graph.parse(_TEST_DIR / "data/test.n3", format="oxNTriples", transactional=True)
-        result = set(self.oxi_graph)
-        self.assertIsNotNone(result)
-        self.assertEqual(len(result), 6)
-        self.remove_triples_from_oxi_graph()
-
-    def test_parsing_ox_ntriples_fallback(self):
+    def test_parsing_ox_n3_fallback(self):
+        graph = rdflib.Graph()
         with warnings.catch_warnings(record=True) as warning:
-            self.memory_graph.parse(_TEST_DIR / "data/test.n3", format="oxNTriples", transactional=False)
+            graph.parse(_TEST_DIR / "data/test.n3", format="ox-n3", transactional=False)
 
-        result = set(self.memory_graph)
-        self.assertIsNotNone(result)
         self.assertEqual(
             warning[0].message.args[0],
             (
@@ -87,29 +56,26 @@ class TestGraphParsing(unittest.TestCase):
                 " store instead. Attempting to parse using rdflib native parser."
             ),
         )
-        self.assertEqual(len(result), 6)
-        self.remove_triples_from_memory_graph()
+        self.assertEqual(len(graph), 6)
 
     def test_parsing_ox_rdfxml_bulk_load(self):
-        self.oxi_graph.parse(_TEST_DIR / "data/test.rdf", format="oxRdfXml", transactional=False)
-        result = set(self.oxi_graph)
-        self.assertIsNotNone(result)
-        self.assertEqual(len(result), 6)
-        self.remove_triples_from_oxi_graph()
+        graph = rdflib.Graph(store="Oxigraph")
+        graph.parse(_TEST_DIR / "data/test.rdf", format="ox-rdf/xml", transactional=False)
+
+        self.assertEqual(len(graph), 6)
 
     def test_parsing_ox_rdfxml_load(self):
-        self.oxi_graph.parse(_TEST_DIR / "data/test.rdf", format="oxRdfXml", transactional=True)
-        result = set(self.oxi_graph)
-        self.assertIsNotNone(result)
+        graph = rdflib.Graph(store="Oxigraph")
+        graph.parse(_TEST_DIR / "data/test.rdf", format="ox-rdf/xml", transactional=True)
+        result = set(graph)
+
         self.assertEqual(len(result), 6)
-        self.remove_triples_from_oxi_graph()
 
     def test_parsing_ox_rdfxml_fallback(self):
+        graph = rdflib.Graph()
         with warnings.catch_warnings(record=True) as warning:
-            self.memory_graph.parse(_TEST_DIR / "data/test.rdf", format="oxRdfXml", transactional=False)
+            graph.parse(_TEST_DIR / "data/test.rdf", format="ox-rdf/xml", transactional=False)
 
-        result = set(self.memory_graph)
-        self.assertIsNotNone(result)
         self.assertEqual(
             warning[0].message.args[0],
             (
@@ -117,8 +83,7 @@ class TestGraphParsing(unittest.TestCase):
                 " store instead. Attempting to parse using rdflib native parser."
             ),
         )
-        self.assertEqual(len(result), 6)
-        self.remove_triples_from_memory_graph()
+        self.assertEqual(len(graph), 6)
 
 
 if __name__ == "__main__":
