@@ -1,6 +1,9 @@
 import unittest
+from pathlib import Path
 
 import rdflib
+
+_TEST_DIR = Path(__file__).resolve().parent
 
 
 class TestGraphParsing(unittest.TestCase):
@@ -11,42 +14,42 @@ class TestGraphParsing(unittest.TestCase):
         self.graph.remove((None, None, None))
 
     def test_parsing_ox_turtle_bulk_load(self):
-        self.graph.parse("./data/test.ttl", format="oxTurtle", transactional=False)
+        self.graph.parse(_TEST_DIR / "data/test.ttl", format="oxTurtle", transactional=False)
         result = set(self.graph)
         self.assertIsNotNone(result)
         self.assertEqual(len(result), 6)
         self.remove_triples()
 
     def test_parsing_ox_turtle_load(self):
-        self.graph.parse("./data/test.ttl", format="oxTurtle", transactional=True)
+        self.graph.parse(_TEST_DIR / "data/test.ttl", format="oxTurtle", transactional=True)
         result = set(self.graph)
         self.assertIsNotNone(result)
         self.assertEqual(len(result), 6)
         self.remove_triples()
 
     def test_parsing_ox_ntriples_bulk_load(self):
-        self.graph.parse("./data/test.n3", format="oxNTriples", transactional=False)
+        self.graph.parse(_TEST_DIR / "data/test.n3", format="oxNTriples", transactional=False)
         result = set(self.graph)
         self.assertIsNotNone(result)
         self.assertEqual(len(result), 6)
         self.remove_triples()
 
     def test_parsing_ox_ntriples_load(self):
-        self.graph.parse("./data/test.n3", format="oxNTriples", transactional=True)
+        self.graph.parse(_TEST_DIR / "data/test.n3", format="oxNTriples", transactional=True)
         result = set(self.graph)
         self.assertIsNotNone(result)
         self.assertEqual(len(result), 6)
         self.remove_triples()
 
     def test_parsing_ox_rdfxml_bulk_load(self):
-        self.graph.parse("./data/test.rdf", format="oxRdfXml", transactional=False)
+        self.graph.parse(_TEST_DIR / "data/test.rdf", format="oxRdfXml", transactional=False)
         result = set(self.graph)
         self.assertIsNotNone(result)
         self.assertEqual(len(result), 6)
         self.remove_triples()
 
     def test_parsing_ox_rdfxml_load(self):
-        self.graph.parse("./data/test.rdf", format="oxRdfXml", transactional=True)
+        self.graph.parse(_TEST_DIR / "data/test.rdf", format="oxRdfXml", transactional=True)
         result = set(self.graph)
         self.assertIsNotNone(result)
         self.assertEqual(len(result), 6)

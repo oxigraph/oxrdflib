@@ -40,7 +40,7 @@ class OxigraphParser(Parser):
                 " Attempting to parse using rdflib native parser.",
                 stacklevel=2,
             )
-            sink.parse(source)
+            sink.parse(source, format=format)
 
         else:
             base_iri = sink.absolutize(source.getPublicId() or source.getSystemId() or "")
