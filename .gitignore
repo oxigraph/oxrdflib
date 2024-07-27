@@ -122,6 +122,3 @@ data/.DS_Store
 .vscode/
 .DS_Store
 default.profraw
-
-# private data
-data
