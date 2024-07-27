@@ -22,7 +22,7 @@ class OxigraphParser(Parser):
     def parse(
         self,
         source: InputSource,
-        sink: Union[Graph, ConjunctiveGraph],
+        sink: Graph,
         format: str,
         encoding: Optional[str] = "utf-8",
         **kwargs: Any,
