@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any, Optional, Union
 
 from rdflib import ConjunctiveGraph, Graph
 from rdflib.exceptions import ParserError
@@ -22,7 +22,7 @@ class OxParser(Parser):
     def parse(
         self,
         source: InputSource,
-        sink: Graph | ConjunctiveGraph,
+        sink: Union[Graph, ConjunctiveGraph],
         format: str,
         encoding: Optional[str] = "utf-8",
         **kwargs: Any,

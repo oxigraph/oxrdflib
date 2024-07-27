@@ -8,7 +8,7 @@ _Quad = Tuple[Node, Node, Node, Graph]
 _TriplePattern = Tuple[Optional[Node], Optional[Node], Optional[Node]]
 
 
-def mime_types_mapping() -> dict[str, str]:
+def mime_types_mapping() -> dict:
     return {
         "oxNTriples": "application/n-triples",
         "oxNQuads": "application/n-quads",
