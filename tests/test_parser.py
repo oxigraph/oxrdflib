@@ -68,7 +68,7 @@ class TestGraphParsing(unittest.TestCase):
         )
 
         self.assertEqual(len(graph), 6)
-        self.assertTrue(next(iter(graph))[0][0].startswith("http://example.com/"))
+        self.assertTrue(next(iter(graph))[0].startswith("http://example.com/"))
 
     def test_parsing_ox_rdfxml_load(self):
         graph = rdflib.Graph(store="Oxigraph")
@@ -79,7 +79,7 @@ class TestGraphParsing(unittest.TestCase):
             transactional=True,
         )
         self.assertEqual(len(graph), 6)
-        self.assertTrue(next(iter(graph))[0][0].startswith("http://example.com/"))
+        self.assertTrue(next(iter(graph))[0].startswith("http://example.com/"))
 
     def test_parsing_ox_rdfxml_fallback(self):
         graph = rdflib.Graph()
