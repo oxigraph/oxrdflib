@@ -42,21 +42,21 @@ class TestGraphParsing(unittest.TestCase):
         )
         self.assertIsNotNone(graph)
 
-    def test_parsing_ox_n3_bulk_load(self):
+    def test_parsing_ox_ntriples_bulk_load(self):
         graph = rdflib.Graph(store="Oxigraph")
-        graph.parse(_TEST_DIR / "data/test.n3", format="ox-n3", transactional=False)
+        graph.parse(_TEST_DIR / "data/test.nt", format="ox-ntriples", transactional=False)
         self.assertEqual(len(graph), 6)
 
-    def test_parsing_ox_n3_load(self):
+    def test_parsing_ox_ntriples_load(self):
         graph = rdflib.Graph(store="Oxigraph")
-        graph.parse(_TEST_DIR / "data/test.n3", format="ox-n3", transactional=True)
+        graph.parse(_TEST_DIR / "data/test.nt", format="ox-ntriples", transactional=True)
 
         self.assertEqual(len(graph), 6)
 
-    def test_parsing_ox_n3_fallback(self):
+    def test_parsing_ox_ntriples_fallback(self):
         graph = rdflib.Graph()
         with warnings.catch_warnings(record=True) as warning:
-            graph.parse(_TEST_DIR / "data/test.n3", format="ox-n3", transactional=False)
+            graph.parse(_TEST_DIR / "data/test.nt", format="ox-ntriples", transactional=False)
 
         self.assertEqual(
             warning[0].message.args[0],
@@ -67,11 +67,11 @@ class TestGraphParsing(unittest.TestCase):
         )
         self.assertEqual(len(graph), 6)
 
-    def test_parsing_ox_url_n3(self):
+    def test_parsing_ox_url_ntriples(self):
         graph = rdflib.Graph(store="Oxigraph")
         graph.parse(
             "https://i-adopt.github.io/ontology/ontology.nt",
-            format="ox-n3",
+            format="ox-ntriples",
             transactional=True,
         )
         self.assertIsNotNone(graph)

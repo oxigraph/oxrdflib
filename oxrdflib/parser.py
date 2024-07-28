@@ -88,7 +88,7 @@ class OxigraphNTriplesParser(OxigraphParser):
         self,
         source: InputSource,
         sink: Graph,
-        format: str = "ox-n3",
+        format: str = "ox-nt",
         encoding: Optional[str] = None,
         **kwargs: Any,
     ) -> None:
