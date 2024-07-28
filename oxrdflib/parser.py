@@ -1,5 +1,5 @@
 import warnings
-from typing import Any, Optional, Union
+from typing import Any, Optional
 
 from rdflib import ConjunctiveGraph, Graph
 from rdflib.exceptions import ParserError
