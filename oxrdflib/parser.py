@@ -36,8 +36,6 @@ class OxigraphParser(Parser):
         if encoding not in (None, "utf-8"):
             raise ParserError("N3/Turtle files are always utf-8 encoded, I was passed: %s" % encoding)
 
-        # need conversion to rdflib type to handle URLInputSource correctly
-
         if not isinstance(sink.store, OxigraphStore):
             warnings.warn(
                 "Graph store should be an instance of OxigraphStore, "
