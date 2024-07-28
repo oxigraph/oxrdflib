@@ -110,3 +110,29 @@ def from_ox(
     if isinstance(term, ox.Triple):
         return from_ox(term.subject), from_ox(term.predicate), from_ox(term.object)
     raise ValueError(f"Unexpected Oxigraph term: {term!r}")
+
+
+def rdflib_to_mime_type(rdflib_type: str) -> str:
+    """Convert an rdflib type to a MIME type."""
+    if rdflib_type in ("ttl", "turtle"):
+        return "text/turtle"
+    if rdflib_type == "n3":
+        return "application/n-triples"
+    if rdflib_type == "xml":
+        return "application/rdf+xml"
+    if rdflib_type == "trig":
+        return "application/trig"
+    if rdflib_type == "trix":
+        return "application/trix"
+    raise ValueError(f"Unsupported rdflib type: {rdflib_type}")
+
+
+def ox_to_rdflib_type(ox_format: str) -> str:
+    """Convert an Oxigraph format to a rdflib parser format."""
+    if ox_format in ("ox-turtle", "ox-ttl"):
+        return "turtle"
+    if ox_format == "ox-n3":
+        return "n3"
+    if ox_format == "ox-xml":
+        return "xml"
+    raise ValueError(f"Unsupported Oxigraph type: {ox_format}")

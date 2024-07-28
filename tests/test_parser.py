@@ -33,6 +33,15 @@ class TestGraphParsing(unittest.TestCase):
         )
         self.assertEqual(len(graph), 6)
 
+    def test_parsing_ox_url_turtle(self):
+        graph = rdflib.Graph(store="Oxigraph")
+        graph.parse(
+            "https://i-adopt.github.io/ontology/ontology.ttl",
+            format="ox-turtle",
+            transactional=True,
+        )
+        self.assertIsNotNone(graph)
+
     def test_parsing_ox_n3_bulk_load(self):
         graph = rdflib.Graph(store="Oxigraph")
         graph.parse(_TEST_DIR / "data/test.n3", format="ox-n3", transactional=False)
@@ -58,12 +67,21 @@ class TestGraphParsing(unittest.TestCase):
         )
         self.assertEqual(len(graph), 6)
 
+    def test_parsing_ox_url_n3(self):
+        graph = rdflib.Graph(store="Oxigraph")
+        graph.parse(
+            "https://i-adopt.github.io/ontology/ontology.nt",
+            format="ox-n3",
+            transactional=True,
+        )
+        self.assertIsNotNone(graph)
+
     def test_parsing_ox_rdfxml_bulk_load(self):
         graph = rdflib.Graph(store="Oxigraph")
         graph.parse(
             _TEST_DIR / "data/test.rdf",
             publicID="http://example.com/",
-            format="ox-rdf/xml",
+            format="ox-xml",
             transactional=False,
         )
 
@@ -75,11 +93,20 @@ class TestGraphParsing(unittest.TestCase):
         graph.parse(
             _TEST_DIR / "data/test.rdf",
             publicID="http://example.com/",
-            format="ox-rdf/xml",
+            format="ox-xml",
             transactional=True,
         )
         self.assertEqual(len(graph), 6)
         self.assertTrue(next(iter(graph))[0].startswith("http://example.com/"))
+
+    def test_parsing_ox_url_rdfxml_load(self):
+        graph = rdflib.Graph(store="Oxigraph")
+        graph.parse(
+            "https://i-adopt.github.io/ontology/ontology.xml",
+            format="ox-xml",
+            transactional=True,
+        )
+        self.assertIsNotNone(graph)
 
     def test_parsing_ox_rdfxml_fallback(self):
         graph = rdflib.Graph()
@@ -87,7 +114,7 @@ class TestGraphParsing(unittest.TestCase):
             graph.parse(
                 _TEST_DIR / "data/test.rdf",
                 publicID="http://example.com/",
-                format="ox-rdf/xml",
+                format="ox-xml",
                 transactional=False,
             )
 
