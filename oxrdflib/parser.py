@@ -99,7 +99,7 @@ class OxigraphNTriplesParser(OxigraphParser):
 class OxigraphRdfXmlParser(OxigraphParser):
     def parse(
         self,
-        source: FileInputSource,
+        source: InputSource,
         sink: Graph,
         format: str = "ox-xml",
         encoding: Optional[str] = None,
