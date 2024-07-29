@@ -131,7 +131,6 @@ def rdflib_to_mime_type(rdflib_type: str) -> str:
 
 def ox_to_rdflib_type(ox_format: str) -> str:
     """Convert an Oxigraph format to a rdflib parser format."""
-    print(ox_format)
     if ox_format in ("ox-turtle", "ox-ttl"):
         return "turtle"
     if ox_format in ("ox-nt", "ox-ntriples"):
