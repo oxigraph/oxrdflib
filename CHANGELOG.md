@@ -1,3 +1,12 @@
+## unreleased
+
+### Added
+- Oxigraph native parsers for N-Triples, Turtle and RDF/XML.
+
+### Improved
+- Restructured a code based to account for further additions to the codebase.
+
+
 ## [0.3.7] - 2024-03-30
 
 ### Changed
