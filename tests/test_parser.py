@@ -6,6 +6,12 @@ import rdflib
 
 _TEST_DIR = Path(__file__).resolve().parent
 
+_NAMEDGRAPH_QUERY = """SELECT DISTINCT ?g WHERE {
+  GRAPH ?g {
+    ?s ?p ?o .
+  }
+}"""
+
 
 class TestGraphParsing(unittest.TestCase):
     def test_parsing_ox_turtle_bulk_load(self):
@@ -126,6 +132,18 @@ class TestGraphParsing(unittest.TestCase):
             ),
         )
         self.assertEqual(len(graph), 6)
+
+    def test_parsing_ox_nquads_bulk_load(self):
+        graph = rdflib.Dataset(store="Oxigraph")
+        graph.parse(_TEST_DIR / "data/test.nq", format="ox-nquads", transactional=False)
+        self.assertEqual(len(graph), 6)
+        self.assertEqual(len(graph.query(_NAMEDGRAPH_QUERY)), 1)
+
+    def test_parsing_ox_nquads_load(self):
+        graph = rdflib.Dataset(store="Oxigraph")
+        graph.parse(_TEST_DIR / "data/test.nq", format="ox-nquads", transactional=True)
+        self.assertEqual(len(graph), 6)
+        self.assertEqual(len(graph.query(_NAMEDGRAPH_QUERY)), 1)
 
 
 if __name__ == "__main__":

@@ -1,7 +1,7 @@
 import warnings
 from typing import Any, Optional
 
-from rdflib import ConjunctiveGraph, Graph
+from rdflib import Graph
 from rdflib.exceptions import ParserError
 from rdflib.parser import (
     FileInputSource,
@@ -47,6 +47,7 @@ class OxigraphParser(Parser):
 
         else:
             base_iri = sink.absolutize(source.getPublicId() or source.getSystemId() or "")
+            graph_identifier = to_ox(sink.identifier) if format not in ("ox-nq", "ox-nquads") else None
 
             if isinstance(source, FileInputSource):
                 input = source.file
@@ -60,14 +61,14 @@ class OxigraphParser(Parser):
                     input,
                     rdflib_to_mime_type(ox_to_rdflib_type(format)),
                     base_iri=base_iri,
-                    to_graph=to_ox(sink.identifier),
+                    to_graph=graph_identifier,
                 )
             else:
                 sink.store._inner.bulk_load(
                     input,
                     rdflib_to_mime_type(ox_to_rdflib_type(format)),
                     base_iri=base_iri,
-                    to_graph=to_ox(sink.identifier),
+                    to_graph=graph_identifier,
                 )
 
 
@@ -111,12 +112,12 @@ class OxigraphNQuadsParser(OxigraphParser):
     def parse(
         self,
         source: InputSource,
-        sink: ConjunctiveGraph,
-        format: str,
+        sink: Graph,
+        format: str = "ox-nquads",
         encoding: Optional[str] = None,
         **kwargs: Any,
     ) -> None:
-        raise NotImplementedError("N-Quads is not supported yet")
+        super().parse(source, sink, format, encoding, **kwargs)
 
 
 class OxigraphTriGParser(OxigraphParser):

@@ -122,6 +122,8 @@ def rdflib_to_mime_type(rdflib_type: str) -> str:
         return "application/rdf+xml"
     if rdflib_type == "trig":
         return "application/trig"
+    if rdflib_type == "nquads":
+        return "application/n-quads"
     if rdflib_type == "trix":
         return "application/trix"
     raise ValueError(f"Unsupported rdflib type: {rdflib_type}")
@@ -129,10 +131,13 @@ def rdflib_to_mime_type(rdflib_type: str) -> str:
 
 def ox_to_rdflib_type(ox_format: str) -> str:
     """Convert an Oxigraph format to a rdflib parser format."""
+    print(ox_format)
     if ox_format in ("ox-turtle", "ox-ttl"):
         return "turtle"
     if ox_format in ("ox-nt", "ox-ntriples"):
         return "nt"
     if ox_format == "ox-xml":
         return "xml"
+    if ox_format in ("ox-nquads", "ox-nq"):
+        return "nquads"
     raise ValueError(f"Unsupported Oxigraph type: {ox_format}")
