@@ -1,6 +1,6 @@
 <http://example.org/stuff/1.0/document> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Document> <http://example.com/graph1> .
-<http://example.org/stuff/1.0/document> <http://xmlns.com/foaf/0.1/title> "Example Document" <http://example.com/graph1> .
 <http://example.org/stuff/1.0/document> <http://xmlns.com/foaf/0.1/creator> <http://example.org/stuff/1.0/creator> <http://example.com/graph1> .
-<http://example.org/stuff/1.0/creator> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> <http://example.com/graph1> .
-<http://example.org/stuff/1.0/creator> <http://xmlns.com/foaf/0.1/name> "John Doe" <http://example.com/graph1> .
-<http://example.org/stuff/1.0/creator> <http://xmlns.com/foaf/0.1/mbox> <mailto:johndoe@example.org> <http://example.com/graph1> .
+<http://example.org/stuff/1.0/document> <http://xmlns.com/foaf/0.1/title> "Example Document" <http://example.com/graph2> .
+<http://example.org/stuff/1.0/creator> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://xmlns.com/foaf/0.1/Person> <http://example.com/graph3> .
+<http://example.org/stuff/1.0/creator> <http://xmlns.com/foaf/0.1/name> "John Doe" <urn:x-rdflib:default> .
+<http://example.org/stuff/1.0/creator> <http://xmlns.com/foaf/0.1/mbox> <mailto:johndoe@example.org> <urn:x-rdflib:default> .
