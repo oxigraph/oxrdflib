@@ -185,6 +185,28 @@ class TestQuadParsing(unittest.TestCase):
             2,
         )
 
+    def test_parsing_ox_nquads_load_conjuctive(self):
+        graph = rdflib.ConjunctiveGraph(store="Oxigraph")
+        graph.parse(_TEST_DIR / "data/test.nq", format="ox-nquads", transactional=True)
+        self.assertEqual(len(graph), 6)
+        self.assertEqual(len(graph.query(_NAMEDGRAPH_QUERY)), 4)
+        self.assertEqual(
+            len(graph.query(_NAMEDGRAPH_TRIPLE_QUERY.format(namedgraph="urn:x-rdflib:default"))),
+            2,
+        )
+        self.assertEqual(
+            len(graph.query(_NAMEDGRAPH_TRIPLE_QUERY.format(namedgraph="http://example.com/graph3"))),
+            1,
+        )
+        self.assertEqual(
+            len(graph.query(_NAMEDGRAPH_TRIPLE_QUERY.format(namedgraph="http://example.com/graph2"))),
+            1,
+        )
+        self.assertEqual(
+            len(graph.query(_NAMEDGRAPH_TRIPLE_QUERY.format(namedgraph="http://example.com/graph1"))),
+            2,
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

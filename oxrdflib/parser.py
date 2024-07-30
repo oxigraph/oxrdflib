@@ -117,6 +117,9 @@ class OxigraphNQuadsParser(OxigraphParser):
         encoding: Optional[str] = None,
         **kwargs: Any,
     ) -> None:
+        if not sink.context_aware:
+            raise ParserError("OxigraphNQuadsParser must be given a context aware store.")
+
         super().parse(source, sink, format, encoding, **kwargs)
 
 
