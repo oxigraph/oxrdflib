@@ -12,21 +12,21 @@ description = "rdflib stores based on pyoxigraph"
 classifiers = [
     "Programming Language :: Python",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "License :: OSI Approved :: BSD License",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Database :: Database Engines/Servers",
 ]
-dependencies = ["pyoxigraph~=0.3.14", "rdflib>=6.3,<8.0"]
+dependencies = ["pyoxigraph~=0.4.0", "rdflib>=6.3,<8.0"]
 dynamic = ["version"]
 license = { text = "BSD-3-Clause" }
 name = "oxrdflib"
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 
 
 [project.entry-points."rdf.plugins.store"]
