@@ -32,8 +32,6 @@ requires-python = ">=3.8"
 [project.entry-points."rdf.plugins.store"]
 Oxigraph = "oxrdflib.store:OxigraphStore"
 oxigraph = "oxrdflib.store:OxigraphStore"
-OxMemory = "oxrdflib.store:OxigraphStore"
-OxSled = "oxrdflib.store:OxigraphStore"
 
 [project.entry-points."rdf.plugins.parser"]
 ox-turtle = "oxrdflib.parser:OxigraphTurtleParser"
