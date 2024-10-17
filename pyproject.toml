@@ -29,12 +29,11 @@ name = "oxrdflib"
 readme = "README.md"
 requires-python = ">=3.8"
 
-
 [project.entry-points."rdf.plugins.store"]
 Oxigraph = "oxrdflib.store:OxigraphStore"
+oxigraph = "oxrdflib.store:OxigraphStore"
 OxMemory = "oxrdflib.store:OxigraphStore"
 OxSled = "oxrdflib.store:OxigraphStore"
-
 
 [project.entry-points."rdf.plugins.parser"]
 ox-turtle = "oxrdflib.parser:OxigraphTurtleParser"
@@ -43,6 +42,16 @@ ox-ntriples = "oxrdflib.parser:OxigraphNTriplesParser"
 ox-nt = "oxrdflib.parser:OxigraphNTriplesParser"
 ox-xml = "oxrdflib.parser:OxigraphRdfXmlParser"
 
+[project.entry-points."rdf.plugins.serializer"]
+ox-turtle = "oxrdflib.serializer:OxigraphTurtleSerializer"
+ox-ttl = "oxrdflib.serializer:OxigraphTurtleSerializer"
+ox-ntriples = "oxrdflib.serializer:OxigraphNTriplesSerializer"
+ox-n3 = "oxrdflib.serializer:OxigraphN3Serializer"
+ox-nquads = "oxrdflib.serializer:OxigraphNQuadsSerializer"
+ox-nt = "oxrdflib.serializer:OxigraphNTriplesSerializer"
+ox-nt11 = "oxrdflib.serializer:OxigraphNTriplesSerializer"
+ox-trig = "oxrdflib.serializer:OxigraphTriGSerializer"
+ox-xml = "oxrdflib.serializer:OxigraphRdfXmlSerializer"
 
 [project.urls]
 Changelog = "https://github.com/oxigraph/oxrdflib/blob/main/CHANGELOG.md"
