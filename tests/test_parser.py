@@ -1,131 +1,79 @@
 import unittest
-import warnings
+from io import StringIO
 from pathlib import Path
 
 import rdflib
+from rdflib import Dataset, Graph, URIRef
+from rdflib.graph import DATASET_DEFAULT_GRAPH_ID
 
 _TEST_DIR = Path(__file__).resolve().parent
 
+rdflib_version = tuple(int(e) for e in rdflib.__version__.split(".")[:2])
+s = URIRef("http://example.com/s")
+p = URIRef("http://example.com/vocab#p")
+o = URIRef("http://example.com/o")
+g = URIRef("http://example.com/g")
 
-class TestGraphParsing(unittest.TestCase):
-    def test_parsing_ox_turtle_bulk_load(self):
-        graph = rdflib.Graph(store="Oxigraph")
-        graph.parse(_TEST_DIR / "data/test.ttl", format="ox-turtle", transactional=False)
-        self.assertEqual(len(graph), 6)
 
-    def test_parsing_ox_turtle_load(self):
-        graph = rdflib.Graph(store="Oxigraph")
-        graph.parse(_TEST_DIR / "data/test.ttl", format="ox-turtle", transactional=True)
+class TestParser(unittest.TestCase):
+    def test_parse_graph(self):
+        for store in ("default", "oxigraph"):
+            for transactional in (True, False):
+                for fmt, serialization in (
+                    ("ox-turtle", "@prefix v: <http://example.com/vocab#> . <s> v:p <o> ."),
+                    ("ox-ttl", "@prefix v: <http://example.com/vocab#> . <s> v:p <o> ."),
+                    ("ox-ntriples", "<http://example.com/s> <http://example.com/vocab#p> <http://example.com/o> .\n"),
+                    ("ox-n3", "<http://example.com/s> <http://example.com/vocab#p> <http://example.com/o> .\n"),
+                    ("ox-nquads", "<http://example.com/s> <http://example.com/vocab#p> <http://example.com/o> .\n"),
+                    ("ox-nt", "<http://example.com/s> <http://example.com/vocab#p> <http://example.com/o> .\n"),
+                    ("ox-nt11", "<http://example.com/s> <http://example.com/vocab#p> <http://example.com/o> .\n"),
+                    ("ox-trig", "@prefix v: <http://example.com/vocab#> . <s> v:p <o> ."),
+                    (
+                        "ox-xml",
+                        """<?xml version="1.0" encoding="UTF-8"?>
+            <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+                <rdf:Description rdf:about="s">
+                    <p xmlns="http://example.com/vocab#" rdf:resource="o"/>
+                </rdf:Description>
+            </rdf:RDF>""",
+                    ),
+                ):
+                    with self.subTest(store=store, format=fmt, transactional=transactional):
+                        graph = Graph(store=store, identifier="http://example.com/")
+                        graph.parse(
+                            StringIO(serialization),
+                            format=fmt,
+                            publicID="http://example.com/",
+                            transactional=transactional,
+                        )
+                        self.assertEqual(list(graph), [(s, p, o)])
+                        # TODO: pyoxigraph 0.4.2: test that prefixes are properly loaded
 
-        self.assertEqual(len(graph), 6)
-
-    def test_parsing_ox_turtle_fallback(self):
-        graph = rdflib.Graph()
-        with warnings.catch_warnings(record=True) as warning:
-            graph.parse(_TEST_DIR / "data/test.ttl", format="ox-turtle", transactional=False)
-
-        self.assertEqual(
-            warning[0].message.args[0],
-            (
-                "Graph store should be an instance of OxigraphStore, got Memory"
-                " store instead. Attempting to parse using rdflib native parser."
-            ),
-        )
-        self.assertEqual(len(graph), 6)
-
-    def test_parsing_ox_url_turtle(self):
-        graph = rdflib.Graph(store="Oxigraph")
-        graph.parse(
-            "https://i-adopt.github.io/ontology/ontology.ttl",
-            format="ox-turtle",
-            transactional=True,
-        )
-        self.assertIsNotNone(graph)
-
-    def test_parsing_ox_ntriples_bulk_load(self):
-        graph = rdflib.Graph(store="Oxigraph")
-        graph.parse(_TEST_DIR / "data/test.nt", format="ox-ntriples", transactional=False)
-        self.assertEqual(len(graph), 6)
-
-    def test_parsing_ox_ntriples_load(self):
-        graph = rdflib.Graph(store="Oxigraph")
-        graph.parse(_TEST_DIR / "data/test.nt", format="ox-ntriples", transactional=True)
-
-        self.assertEqual(len(graph), 6)
-
-    def test_parsing_ox_ntriples_fallback(self):
-        graph = rdflib.Graph()
-        with warnings.catch_warnings(record=True) as warning:
-            graph.parse(_TEST_DIR / "data/test.nt", format="ox-ntriples", transactional=False)
-
-        self.assertEqual(
-            warning[0].message.args[0],
-            (
-                "Graph store should be an instance of OxigraphStore, got Memory"
-                " store instead. Attempting to parse using rdflib native parser."
-            ),
-        )
-        self.assertEqual(len(graph), 6)
-
-    def test_parsing_ox_url_ntriples(self):
-        graph = rdflib.Graph(store="Oxigraph")
-        graph.parse(
-            "https://i-adopt.github.io/ontology/ontology.nt",
-            format="ox-ntriples",
-            transactional=True,
-        )
-        self.assertIsNotNone(graph)
-
-    def test_parsing_ox_rdfxml_bulk_load(self):
-        graph = rdflib.Graph(store="Oxigraph")
-        graph.parse(
-            _TEST_DIR / "data/test.rdf",
-            publicID="http://example.com/",
-            format="ox-xml",
-            transactional=False,
-        )
-
-        self.assertEqual(len(graph), 6)
-        self.assertTrue(next(iter(graph))[0].startswith("http://example.com/"))
-
-    def test_parsing_ox_rdfxml_load(self):
-        graph = rdflib.Graph(store="Oxigraph")
-        graph.parse(
-            _TEST_DIR / "data/test.rdf",
-            publicID="http://example.com/",
-            format="ox-xml",
-            transactional=True,
-        )
-        self.assertEqual(len(graph), 6)
-        self.assertTrue(next(iter(graph))[0].startswith("http://example.com/"))
-
-    def test_parsing_ox_url_rdfxml_load(self):
-        graph = rdflib.Graph(store="Oxigraph")
-        graph.parse(
-            "https://i-adopt.github.io/ontology/ontology.xml",
-            format="ox-xml",
-            transactional=True,
-        )
-        self.assertIsNotNone(graph)
-
-    def test_parsing_ox_rdfxml_fallback(self):
-        graph = rdflib.Graph()
-        with warnings.catch_warnings(record=True) as warning:
-            graph.parse(
-                _TEST_DIR / "data/test.rdf",
-                publicID="http://example.com/",
-                format="ox-xml",
-                transactional=False,
-            )
-
-        self.assertEqual(
-            warning[0].message.args[0],
-            (
-                "Graph store should be an instance of OxigraphStore, got Memory"
-                " store instead. Attempting to parse using rdflib native parser."
-            ),
-        )
-        self.assertEqual(len(graph), 6)
+    @unittest.skipIf(rdflib_version < (7, 1), "only works in rdflib 7.1+")
+    def test_parse_dataset(self):
+        for store in ("default", "oxigraph"):
+            for transactional in (True, False):
+                for fmt, serialization in (
+                    (
+                        "ox-nquads",
+                        "<http://example.com/s> <http://example.com/vocab#p> <http://example.com/o> .\n"
+                        "<http://example.com/s> <http://example.com/vocab#p> "
+                        "<http://example.com/o> <http://example.com/g> .\n",
+                    ),
+                    (
+                        "ox-trig",
+                        "@prefix v: <http://example.com/vocab#> . <s> v:p <o> . <g> { <s> v:p <o> }",
+                    ),
+                ):
+                    with self.subTest(store=store, format=fmt, transactional=transactional):
+                        dataset = Dataset(store=store)
+                        dataset.parse(
+                            StringIO(serialization),
+                            format=fmt,
+                            publicID="http://example.com/",
+                            transactional=transactional,
+                        )
+                        self.assertEqual(set(dataset), {(s, p, o, g), (s, p, o, DATASET_DEFAULT_GRAPH_ID)})
 
 
 if __name__ == "__main__":

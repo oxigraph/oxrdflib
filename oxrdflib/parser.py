@@ -1,7 +1,8 @@
-import warnings
-from typing import Any, Optional
+from abc import ABC, abstractmethod
+from typing import Optional
 
-from rdflib import ConjunctiveGraph, Graph
+from pyoxigraph import DefaultGraph, RdfFormat, parse
+from rdflib import Graph
 from rdflib.exceptions import ParserError
 from rdflib.parser import (
     FileInputSource,
@@ -11,113 +12,86 @@ from rdflib.parser import (
     create_input_source,
 )
 
-from oxrdflib._converter import guess_rdf_format, ox_to_rdflib_type, to_ox
+from oxrdflib._converter import from_ox, from_ox_graph_name, to_ox
 from oxrdflib.store import OxigraphStore
 
 __all__ = [
+    "OxigraphN3Parser",
     "OxigraphTurtleParser",
     "OxigraphNTriplesParser",
     "OxigraphRdfXmlParser",
+    "OxigraphTriGParser",
+    "OxigraphNQuadsParser",
 ]
 
 
-class OxigraphParser(Parser):
+class _OxigraphParser(Parser, ABC):
     def parse(
         self,
         source: InputSource,
         sink: Graph,
-        format: str,
+        *,
         encoding: Optional[str] = "utf-8",
-        **kwargs: Any,
+        transactional: bool = True,
     ) -> None:
         if encoding not in (None, "utf-8"):
-            raise ParserError("N3/Turtle files are always utf-8 encoded, I was passed: {encoding}")
-
-        if not isinstance(sink.store, OxigraphStore):
-            warnings.warn(
-                "Graph store should be an instance of OxigraphStore, "
-                f"got {type(sink.store).__name__} store instead."
-                " Attempting to parse using rdflib native parser.",
-                stacklevel=2,
-            )
-            sink.parse(source, format=ox_to_rdflib_type(format))
-            return
-
+            raise ParserError(f"Only the 'utf-8' encoding is supported, '{encoding}' given")
         base_iri = sink.absolutize(source.getPublicId() or source.getSystemId() or "")
-
         args = {
-            "format": guess_rdf_format(format),
+            "format": self._format,
             "base_iri": base_iri,
-            "to_graph": to_ox(sink.identifier),
         }
+
         if isinstance(source, URLInputSource):
-            source = create_input_source(source.url, format=ox_to_rdflib_type(format))
+            source = create_input_source(source.url, format=self._format.file_extension)
         if isinstance(source, FileInputSource):
             args["path"] = source.file.name
         else:
             args["input"] = source.getByteStream()
 
-        if kwargs.get("transactional", True):
-            sink.store._inner.load(**args)
+        if isinstance(sink.store, OxigraphStore):
+            if transactional:
+                sink.store._inner.load(**args, to_graph=to_ox(sink.identifier))
+            else:
+                sink.store._inner.bulk_load(**args, to_graph=to_ox(sink.identifier))
         else:
-            sink.store._inner.bulk_load(**args)
+            sink.store.addN(
+                (
+                    from_ox(quad.subject),
+                    from_ox(quad.predicate),
+                    from_ox(quad.object),
+                    sink
+                    if isinstance(quad.graph_name, DefaultGraph)
+                    else from_ox_graph_name(quad.graph_name, sink.store),
+                )
+                for quad in parse(**args)
+            )
+
+    @property
+    @abstractmethod
+    def _format(self) -> RdfFormat:
+        pass
 
 
-class OxigraphTurtleParser(OxigraphParser):
-    def parse(
-        self,
-        source: InputSource,
-        sink: Graph,
-        format: str = "ox-turtle",
-        encoding: Optional[str] = "utf-8",
-        **kwargs: Any,
-    ) -> None:
-        super().parse(source, sink, format, encoding, **kwargs)
+class OxigraphTurtleParser(_OxigraphParser):
+    _format = RdfFormat.TURTLE
 
 
-class OxigraphNTriplesParser(OxigraphParser):
-    def parse(
-        self,
-        source: InputSource,
-        sink: Graph,
-        format: str = "ox-nt",
-        encoding: Optional[str] = None,
-        **kwargs: Any,
-    ) -> None:
-        super().parse(source, sink, format, encoding, **kwargs)
+class OxigraphNTriplesParser(_OxigraphParser):
+    _format = RdfFormat.N_TRIPLES
 
 
-class OxigraphRdfXmlParser(OxigraphParser):
-    def parse(
-        self,
-        source: FileInputSource,
-        sink: Graph,
-        format: str = "ox-xml",
-        encoding: Optional[str] = None,
-        **kwargs: Any,
-    ) -> None:
-        super().parse(source, sink, format, encoding, **kwargs)
+class OxigraphRdfXmlParser(_OxigraphParser):
+    _format = RdfFormat.RDF_XML
 
 
-class OxigraphNQuadsParser(OxigraphParser):
-    def parse(
-        self,
-        source: InputSource,
-        sink: ConjunctiveGraph,
-        format: str,
-        encoding: Optional[str] = None,
-        **kwargs: Any,
-    ) -> None:
-        raise NotImplementedError("N-Quads is not supported yet")
+class OxigraphN3Parser(_OxigraphParser):
+    _format = RdfFormat.N3
 
 
-class OxigraphTriGParser(OxigraphParser):
-    def parse(
-        self,
-        source: InputSource,
-        sink: Graph,
-        format: str,
-        encoding: Optional[str] = "utf-8",
-        **kwargs: Any,
-    ) -> None:
-        raise NotImplementedError("TriG parser is not supported yet")
+class OxigraphNQuadsParser(_OxigraphParser):
+    _format = RdfFormat.N_QUADS
+
+
+class OxigraphTriGParser(_OxigraphParser):
+    _format = RdfFormat.TRIG
