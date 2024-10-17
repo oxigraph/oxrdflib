@@ -35,6 +35,7 @@ class TestSerializer(unittest.TestCase):
                     graph.add((s, p, o))
                     graph.store.add((o, p, s), context=g)  # Should not be serialized
                     self.assertEqual(graph.serialize(format=fmt), serialization)
+                    # TODO: pyoxigraph 0.4.2: test that prefixes and base are properly used
 
     def test_serialize_dataset(self):
         for store in ("default", "oxigraph"):

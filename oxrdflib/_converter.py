@@ -108,21 +108,3 @@ def from_ox(
     if isinstance(term, ox.Triple):
         return from_ox(term.subject), from_ox(term.predicate), from_ox(term.object)
     raise ValueError(f"Unexpected Oxigraph term: {term!r}")
-
-
-def guess_rdf_format(rdflib_type: str) -> ox.RdfFormat:
-    """Convert an rdflib type to a MIME type."""
-    rdflib_type = ox_to_rdflib_type(rdflib_type)
-    rdf_format = (
-        ox.RdfFormat.from_media_type(rdflib_type)
-        or ox.RdfFormat.from_extension(rdflib_type)
-        or ox.RdfFormat.from_media_type(f"application/{rdflib_type}")
-    )
-    if rdf_format is None:
-        raise ValueError(f"Unsupported rdflib type: {rdflib_type}")
-    return rdf_format
-
-
-def ox_to_rdflib_type(ox_format: str) -> str:
-    """Convert an Oxigraph format to a rdflib parser format."""
-    return ox_format[len("ox-") :] if ox_format.startswith("ox-") else ox_format
