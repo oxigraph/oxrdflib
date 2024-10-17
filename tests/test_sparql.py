@@ -1,9 +1,12 @@
 import json
 import unittest
 
-from rdflib import RDF, ConjunctiveGraph, Graph, Namespace
+import rdflib
+from rdflib import RDF, ConjunctiveGraph, Dataset, Graph, Namespace
 
 EX = Namespace("http://example.com/")
+
+rdflib_version = tuple(int(e) for e in rdflib.__version__.split(".")[:2])
 
 
 class SparqlTestCase(unittest.TestCase):
@@ -44,6 +47,20 @@ class SparqlTestCase(unittest.TestCase):
 
     def test_select_query_conjunctive(self):
         g = ConjunctiveGraph("Oxigraph")
+        g.add((EX.foo, RDF.type, EX.Entity))
+        result = g.query("SELECT ?s WHERE { ?s ?p ?o }")
+        self.assertEqual(len(result), 1)
+        self.assertEqual(
+            json.loads(result.serialize(format="json").decode("utf-8")),
+            {
+                "results": {"bindings": [{"s": {"type": "uri", "value": "http://example.com/foo"}}]},
+                "head": {"vars": ["s"]},
+            },
+        )
+
+    @unittest.skipIf(rdflib_version < (7, 1), "only works in rdflib 7.1+")
+    def test_select_query_dataset(self):
+        g = Dataset("Oxigraph")
         g.add((EX.foo, RDF.type, EX.Entity))
         result = g.query("SELECT ?s WHERE { ?s ?p ?o }")
         self.assertEqual(len(result), 1)
