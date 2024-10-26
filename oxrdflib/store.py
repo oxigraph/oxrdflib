@@ -111,10 +111,16 @@ class OxigraphStore(Store):
             return iter(())  # We just don't return anything
 
     def __len__(self, context: Optional[Graph] = None) -> int:
-        if context is None:
-            # TODO: very bad
-            return len({q.triple for q in self._inner})
-        return sum(1 for _ in self._inner.quads_for_pattern(None, None, None, to_ox(context)))
+        return int(
+            next(
+                self._inner.query(
+                    "SELECT (COUNT(DISTINCT TRIPLE(?s, ?p, ?o)) AS ?c) WHERE { ?s ?p ?o }",
+                    **(
+                        {"use_default_graph_as_union": True} if context is None else {"default_graph": to_ox(context)}  # type: ignore[dict-item]
+                    ),
+                )
+            )[0].value
+        )
 
     def contexts(self, triple: Optional[_Triple] = None) -> Generator[Graph, None, None]:
         if triple is None:
@@ -145,9 +151,9 @@ class OxigraphStore(Store):
             use_default_graph_as_union=queryGraph == "__UNION__",
             default_graph=(to_ox(queryGraph) if isinstance(queryGraph, Node) else None),
         )
-        if isinstance(result, bool):
+        if isinstance(result, ox.QueryBoolean):
             out = Result("ASK")
-            out.askAnswer = result
+            out.askAnswer = bool(result)
         elif isinstance(result, ox.QuerySolutions):
             out = Result("SELECT")
             out.vars = [Variable(v.value) for v in result.variables]

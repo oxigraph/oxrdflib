@@ -11,7 +11,7 @@ from rdflib.parser import (
     create_input_source,
 )
 
-from oxrdflib._converter import ox_to_rdflib_type, rdflib_to_mime_type, to_ox
+from oxrdflib._converter import guess_rdf_format, ox_to_rdflib_type, to_ox
 from oxrdflib.store import OxigraphStore
 
 __all__ = [
@@ -22,9 +22,6 @@ __all__ = [
 
 
 class OxigraphParser(Parser):
-    def __init__(self):
-        pass
-
     def parse(
         self,
         source: InputSource,
@@ -34,7 +31,7 @@ class OxigraphParser(Parser):
         **kwargs: Any,
     ) -> None:
         if encoding not in (None, "utf-8"):
-            raise ParserError("N3/Turtle files are always utf-8 encoded, I was passed: %s" % encoding)
+            raise ParserError("N3/Turtle files are always utf-8 encoded, I was passed: {encoding}")
 
         if not isinstance(sink.store, OxigraphStore):
             warnings.warn(
@@ -44,31 +41,26 @@ class OxigraphParser(Parser):
                 stacklevel=2,
             )
             sink.parse(source, format=ox_to_rdflib_type(format))
+            return
 
+        base_iri = sink.absolutize(source.getPublicId() or source.getSystemId() or "")
+
+        args = {
+            "format": guess_rdf_format(format),
+            "base_iri": base_iri,
+            "to_graph": to_ox(sink.identifier),
+        }
+        if isinstance(source, URLInputSource):
+            source = create_input_source(source.url, format=ox_to_rdflib_type(format))
+        if isinstance(source, FileInputSource):
+            args["path"] = source.file.name
         else:
-            base_iri = sink.absolutize(source.getPublicId() or source.getSystemId() or "")
+            args["input"] = source.getByteStream()
 
-            if isinstance(source, FileInputSource):
-                input = source.file
-            elif isinstance(source, URLInputSource):
-                input = create_input_source(source.url, format=ox_to_rdflib_type(format)).getByteStream()
-            else:
-                input = source.getByteStream()
-
-            if kwargs.get("transactional", True):
-                sink.store._inner.load(
-                    input,
-                    rdflib_to_mime_type(ox_to_rdflib_type(format)),
-                    base_iri=base_iri,
-                    to_graph=to_ox(sink.identifier),
-                )
-            else:
-                sink.store._inner.bulk_load(
-                    input,
-                    rdflib_to_mime_type(ox_to_rdflib_type(format)),
-                    base_iri=base_iri,
-                    to_graph=to_ox(sink.identifier),
-                )
+        if kwargs.get("transactional", True):
+            sink.store._inner.load(**args)
+        else:
+            sink.store._inner.bulk_load(**args)
 
 
 class OxigraphTurtleParser(OxigraphParser):

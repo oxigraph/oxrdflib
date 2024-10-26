@@ -112,27 +112,19 @@ def from_ox(
     raise ValueError(f"Unexpected Oxigraph term: {term!r}")
 
 
-def rdflib_to_mime_type(rdflib_type: str) -> str:
+def guess_rdf_format(rdflib_type: str) -> ox.RdfFormat:
     """Convert an rdflib type to a MIME type."""
-    if rdflib_type in ("ttl", "turtle"):
-        return "text/turtle"
-    if rdflib_type in ("nt", "ntriples"):
-        return "application/n-triples"
-    if rdflib_type == "xml":
-        return "application/rdf+xml"
-    if rdflib_type == "trig":
-        return "application/trig"
-    if rdflib_type == "trix":
-        return "application/trix"
-    raise ValueError(f"Unsupported rdflib type: {rdflib_type}")
+    rdflib_type = ox_to_rdflib_type(rdflib_type)
+    rdf_format = (
+        ox.RdfFormat.from_media_type(rdflib_type)
+        or ox.RdfFormat.from_extension(rdflib_type)
+        or ox.RdfFormat.from_media_type(f"application/{rdflib_type}")
+    )
+    if rdf_format is None:
+        raise ValueError(f"Unsupported rdflib type: {rdflib_type}")
+    return rdf_format
 
 
 def ox_to_rdflib_type(ox_format: str) -> str:
     """Convert an Oxigraph format to a rdflib parser format."""
-    if ox_format in ("ox-turtle", "ox-ttl"):
-        return "turtle"
-    if ox_format in ("ox-nt", "ox-ntriples"):
-        return "nt"
-    if ox_format == "ox-xml":
-        return "xml"
-    raise ValueError(f"Unsupported Oxigraph type: {ox_format}")
+    return ox_format[len("ox-") :] if ox_format.startswith("ox-") else ox_format
