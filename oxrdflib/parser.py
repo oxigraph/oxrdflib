@@ -1,7 +1,8 @@
+import warnings
 from abc import ABC, abstractmethod
 from typing import Optional
 
-from pyoxigraph import DefaultGraph, RdfFormat, parse
+from pyoxigraph import RdfFormat
 from rdflib import Graph
 from rdflib.exceptions import ParserError
 from rdflib.parser import (
@@ -12,7 +13,7 @@ from rdflib.parser import (
     create_input_source,
 )
 
-from oxrdflib._converter import from_ox, to_ox
+from oxrdflib._converter import to_ox
 from oxrdflib.store import OxigraphStore
 
 __all__ = [
@@ -42,7 +43,6 @@ class _OxigraphParser(Parser, ABC):
             "base_iri": base_iri,
             "to_graph": to_ox(sink.identifier),
         }
-
         if isinstance(source, URLInputSource):
             source = create_input_source(source.url, format=self._format.file_extension)
         if isinstance(source, FileInputSource):
@@ -56,15 +56,13 @@ class _OxigraphParser(Parser, ABC):
             else:
                 sink.store._inner.bulk_load(**args)
         else:
-            sink.store.addN(
-                (
-                    from_ox(quad.subject),
-                    from_ox(quad.predicate),
-                    from_ox(quad.object),
-                    sink.identifier if isinstance(quad.graph_name, DefaultGraph) else from_ox(quad.graph_name),
-                )
-                for quad in parse(**args)
+            warnings.warn(
+                "Graph store should be an instance of OxigraphStore, "
+                f"got {type(sink.store).__name__} store instead."
+                " Attempting to parse using rdflib native parser.",
+                stacklevel=2,
             )
+            sink.parse(source)
 
     @property
     @abstractmethod
