@@ -12,28 +12,26 @@ description = "rdflib stores based on pyoxigraph"
 classifiers = [
     "Programming Language :: Python",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "License :: OSI Approved :: BSD License",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Database :: Database Engines/Servers",
 ]
-dependencies = ["pyoxigraph~=0.3.14", "rdflib>=6.3,<8.0"]
+dependencies = ["pyoxigraph~=0.4.0", "rdflib>=6.3,<8.0"]
 dynamic = ["version"]
 license = { text = "BSD-3-Clause" }
 name = "oxrdflib"
 readme = "README.md"
-requires-python = ">=3.7"
-
+requires-python = ">=3.8"
 
 [project.entry-points."rdf.plugins.store"]
 Oxigraph = "oxrdflib.store:OxigraphStore"
-OxMemory = "oxrdflib.store:OxigraphStore"
-OxSled = "oxrdflib.store:OxigraphStore"
-
+oxigraph = "oxrdflib.store:OxigraphStore"
 
 [project.entry-points."rdf.plugins.parser"]
 ox-turtle = "oxrdflib.parser:OxigraphTurtleParser"
@@ -44,6 +42,16 @@ ox-xml = "oxrdflib.parser:OxigraphRdfXmlParser"
 ox-nquads = "oxrdflib.parser:OxigraphNQuadsParser"
 ox-nq = "oxrdflib.parser:OxigraphNQuadsParser"
 
+[project.entry-points."rdf.plugins.serializer"]
+ox-turtle = "oxrdflib.serializer:OxigraphTurtleSerializer"
+ox-ttl = "oxrdflib.serializer:OxigraphTurtleSerializer"
+ox-ntriples = "oxrdflib.serializer:OxigraphNTriplesSerializer"
+ox-n3 = "oxrdflib.serializer:OxigraphN3Serializer"
+ox-nquads = "oxrdflib.serializer:OxigraphNQuadsSerializer"
+ox-nt = "oxrdflib.serializer:OxigraphNTriplesSerializer"
+ox-nt11 = "oxrdflib.serializer:OxigraphNTriplesSerializer"
+ox-trig = "oxrdflib.serializer:OxigraphTriGSerializer"
+ox-xml = "oxrdflib.serializer:OxigraphRdfXmlSerializer"
 
 [project.urls]
 Changelog = "https://github.com/oxigraph/oxrdflib/blob/main/CHANGELOG.md"
