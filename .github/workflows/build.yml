@@ -33,7 +33,6 @@ jobs:
       - run: python -m unittest
         working-directory: ./tests
 
-
   test_msv:
     runs-on: ubuntu-latest
     steps:
@@ -45,6 +44,20 @@ jobs:
       - run: pip install . && pip install -r requirements-dev.txt && pip install 'rdflib==6.3.0'
       - run: python -m unittest
         working-directory: ./tests
+
+  codecov:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.13
+          cache: pip
+      - run: pip install -e . && pip install pytest pytest-cov -r requirements-dev.txt
+      - run: pytest --cov --cov-report=xml
+      - uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   publish:
     if: startsWith(github.ref, 'refs/tags')
