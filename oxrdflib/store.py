@@ -13,6 +13,7 @@ from typing import (
 
 import pyoxigraph as ox
 from rdflib import Graph
+from rdflib.graph import DATASET_DEFAULT_GRAPH_ID
 from rdflib.plugins.sparql.sparql import Query, Update
 from rdflib.query import Result
 from rdflib.store import VALID_STORE, Store
@@ -172,9 +173,15 @@ class OxigraphStore(Store):
         initNs: Mapping[str, Any],  # noqa: N803
         initBindings: Mapping[str, Identifier],  # noqa: N803
         queryGraph: str,  # noqa: N803
-        **kwargs: Any,
+        **kwargs: Any,  # noqa: ARG002
     ) -> None:
-        raise NotImplementedError
+        init_ns = dict(self._namespace_for_prefix, **initNs)
+        update = "".join(f"PREFIX {prefix}: <{namespace}>\n" for prefix, namespace in init_ns.items()) + update
+        if initBindings:
+            raise NotImplementedError("initBindings are not supported by Oxigraph store")
+        if queryGraph != DATASET_DEFAULT_GRAPH_ID:
+            raise NotImplementedError(f"Only {DATASET_DEFAULT_GRAPH_ID} is supported by native Oxigraph store")
+        self._inner.update(update)
 
     def commit(self) -> None:
         # TODO: implement

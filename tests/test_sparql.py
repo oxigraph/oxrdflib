@@ -128,19 +128,19 @@ class SparqlTestCase(unittest.TestCase):
         g = Dataset("Oxigraph")
         g.add((EX.foo, RDF.type, EX.Entity, EX.g))
         g.update("INSERT { ?s a <http://example.com/Entity2> } WHERE { GRAPH ?g { ?s a <http://example.com/Entity> } }")
-        self.assertIn((EX.foo, RDF.type, EX.Entity2, g), g)  # RDFlib issue #2019
+        self.assertIn((EX.foo, RDF.type, EX.Entity2, g.identifier), g)
 
     def test_insert_where_update_dataset_default_graph(self):
         g = Dataset("Oxigraph")
         g.add((EX.foo, RDF.type, EX.Entity))
         g.update("INSERT { ?s a <http://example.com/Entity2> } WHERE { ?s a <http://example.com/Entity> }")
-        self.assertIn((EX.foo, RDF.type, EX.Entity2, g.identifier), g)  # RDFlib issue #2019
+        self.assertIn((EX.foo, RDF.type, EX.Entity2, g.identifier), g)
 
     def test_insert_where_update_dataset_default_union(self):
         g = Dataset("Oxigraph", default_union=True)
         g.add((EX.foo, RDF.type, EX.Entity, EX.g))
         g.update("INSERT { ?s a <http://example.com/Entity2> } WHERE { ?s a <http://example.com/Entity> }")
-        self.assertIn((EX.foo, RDF.type, EX.Entity2, g.identifier), g)  # RDFlib issue #2019
+        self.assertIn((EX.foo, RDF.type, EX.Entity2, g.identifier), g)
 
 
 if __name__ == "__main__":

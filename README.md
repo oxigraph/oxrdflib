@@ -15,8 +15,9 @@ It also exposes pyoxigraph parsers and serializers as rdflib parser and serializ
 Oxigraph store can be used as drop-in replacement of the rdflib default one. It support context but not formulas.
 Transaction support is not implemented yet.
 
-SPARQL query evaluation is done by pyoxigraph instead of rdflib if the Oxigraph store is used.
-SPARQL update evaluation is still done using rdflib because of [a limitation in rdflib context management](https://github.com/RDFLib/rdflib/issues/1396).
+SPARQL query and update evaluation is done by pyoxigraph instead of rdflib if the Oxigraph store is used.
+SPARQL update evaluation on `Graph` and `ConjunctiveGraph` is still done
+using rdflib because of [a limitation in rdflib context management](https://github.com/RDFLib/rdflib/issues/1396).
 
 Oxrdflib is [available on Pypi](https://pypi.org/project/oxrdflib/) and installable with:
 ```bash
