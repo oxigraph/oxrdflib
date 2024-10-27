@@ -1,14 +1,12 @@
-from typing import TYPE_CHECKING, Optional, Tuple, Union
+from typing import Optional, Tuple, Union
 
 import pyoxigraph as ox
 from rdflib import Graph
 from rdflib.graph import DATASET_DEFAULT_GRAPH_ID
+from rdflib.store import Store
 from rdflib.term import BNode, Literal, Node, URIRef
 
 from oxrdflib._type import _Quad, _Triple, _TriplePattern
-
-if TYPE_CHECKING:
-    from oxrdflib.store import OxigraphStore
 
 
 def to_ox(
@@ -83,7 +81,7 @@ def to_ox_term_pattern(
 
 def from_ox_graph_name(
     graph_name: Union[ox.NamedNode, ox.BlankNode, ox.DefaultGraph],
-    store: "OxigraphStore",
+    store: Store,
 ) -> Graph:
     if isinstance(graph_name, ox.NamedNode):
         return Graph(identifier=URIRef(graph_name.value), store=store)
