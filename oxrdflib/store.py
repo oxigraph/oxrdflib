@@ -103,7 +103,7 @@ class OxigraphStore(Store):
             return (
                 (
                     (from_ox(q.subject), from_ox(q.predicate), from_ox(q.object)),
-                    iter(((from_ox_graph_name(q.graph_name, self) if q.graph_name != ox.DefaultGraph() else None),)),
+                    iter(((from_ox_graph_name(q.graph_name, self)),)),
                 )
                 for q in self._inner.quads_for_pattern(*to_ox_quad_pattern(triple_pattern, context))
             )
