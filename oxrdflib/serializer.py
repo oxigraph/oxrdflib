@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import IO, Any, Optional
 
 from pyoxigraph import RdfFormat, serialize
+from rdflib import Dataset
 from rdflib.serializer import Serializer
 
 from oxrdflib._converter import to_ox
@@ -28,8 +29,12 @@ class _OxigraphSerializer(Serializer, ABC):
         if encoding not in (None, "utf-8"):
             raise ValueError(f"RDF files are always utf-8 encoded, I was passed: {encoding}")
         # TODO: base and prefixes
-        if isinstance(self.store, OxigraphStore):
-            self.store._inner.dump(stream, format=self._format)
+        if isinstance(self.store.store, OxigraphStore):
+            self.store.store._inner.dump(
+                stream,
+                format=self._format,
+                from_graph=None if isinstance(self.store, Dataset) else to_ox(self.store.identifier),
+            )
         else:
             serialize((to_ox(q) for q in self.store), stream, format=self._format)
 
