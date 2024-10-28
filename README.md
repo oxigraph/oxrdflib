@@ -10,7 +10,9 @@ Oxrdflib
 Oxrdflib provides an [rdflib](https://rdflib.readthedocs.io/) store based on [pyoxigraph](https://oxigraph.org/pyoxigraph/).
 This store is named `"Oxigraph"`.
 
-This store can be used as drop-in replacement of the rdflib default one. It support context but not formulas.
+It also exposes pyoxigraph parsers and serializers as rdflib parser and serializer plugins.
+
+Oxigraph store can be used as drop-in replacement of the rdflib default one. It support context but not formulas.
 Transaction support is not implemented yet.
 
 SPARQL query evaluation is done by pyoxigraph instead of rdflib if the Oxigraph store is used.
@@ -29,6 +31,8 @@ However, Oxigraph should be in a good enough shape to power most of use cases if
 
 ## API
 
+### Store
+
 To create a rdflib graph using the Oxigraph store use
 ```python
 rdflib.Graph(store="Oxigraph")
@@ -38,15 +42,7 @@ instead of the usual
 rdflib.Graph()
 ```
 
-Similarly, to get a conjunctive graph, use
-```python
-rdflib.ConjunctiveGraph(store="Oxigraph")
-```
-instead of the usual
-```python
-rdflib.ConjunctiveGraph()
-```
-and to get a dataset, use
+Similarly, to get a dataset, use
 
 ```python
 rdflib.Dataset(store="Oxigraph")
@@ -56,7 +52,7 @@ instead of the usual
 rdflib.Dataset()
 ```
 
-If you want to get the store data persisted on disk, use the `open` method on the `Graph` object (or `ConjunctiveGraph` or `Dataset`) with the directory where data should be persisted. For example:
+If you want to get the store data persisted on disk, use the `open` method on the `Graph` or `Dataset` object with the directory where data should be persisted. For example:
 ```python
 graph = rdflib.Graph(store="Oxigraph", identifier="http://example.com") # without identifier, some blank node will be used
 graph.open("test_dir")
@@ -79,6 +75,29 @@ This might be handy to e.g. open the database as read-only:
 graph = rdflib.Graph(store=oxrdflib.OxigraphStore(store=pyoxigraph.Store.read_only("test_dir")))
 ```
 
+### Parsers and serializers
+
+To use Oxigraph parser, prefix the format identifiers with `ox-`.
+For example, to load data using the Oxigraph NTriples parser:
+```python
+graph.parse(data, format="ox-nt")
+```
+and to serialize to Turtle:
+```python
+graph.serialize(format="ox-ttl")
+```
+
+The following formats are supported:
+- `ox-ntriples` (`ox-nt`)
+- `ox-nquads` (`ox-nq`)
+- `ox-turtle` (`ox-ttl`)
+- `ox-trig`
+- `ox-xml`
+
+Note that Oxigraph parser and serializers are not 1:1 compatible with the rdflib ones and some minor differences exist.
+
+An optimization has also been setup to skip Python entirely
+if the Oxigraph parsers and serializers are used with the Oxigraph store.
 
 ## Differences with rdflib default store
 - relative IRIs are not supported by Oxigraph.
