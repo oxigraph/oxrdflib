@@ -22,21 +22,24 @@ class _OxigraphSerializer(Serializer, ABC):
     def serialize(
         self,
         stream: IO[bytes],
-        _base: Optional[str] = None,
+        base: Optional[str] = None,
         encoding: Optional[str] = None,
         **kwargs: Any,  # noqa: ARG002
     ) -> None:
         if encoding not in (None, "utf-8"):
             raise ValueError(f"RDF files are always utf-8 encoded, I was passed: {encoding}")
-        # TODO: base and prefixes
+        base_iri = base or self.store.base
+        prefixes = dict(self.store.namespaces())
         if isinstance(self.store.store, OxigraphStore):
             self.store.store._inner.dump(
                 stream,
                 format=self._format,
                 from_graph=None if isinstance(self.store, Dataset) else to_ox(self.store.identifier),
+                base_iri=base_iri,
+                prefixes=prefixes,
             )
         else:
-            serialize((to_ox(q) for q in self.store), stream, format=self._format)
+            serialize((to_ox(q) for q in self.store), stream, format=self._format, base_iri=base_iri, prefixes=prefixes)
 
     @property
     @abstractmethod

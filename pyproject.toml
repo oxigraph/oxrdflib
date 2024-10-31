@@ -22,7 +22,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Database :: Database Engines/Servers",
 ]
-dependencies = ["pyoxigraph~=0.4.0", "rdflib>=6.3,<8.0"]
+dependencies = ["pyoxigraph~=0.4.2", "rdflib>=6.3,<8.0"]
 dynamic = ["version"]
 license = { text = "BSD-3-Clause" }
 name = "oxrdflib"

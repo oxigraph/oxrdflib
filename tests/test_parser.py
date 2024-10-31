@@ -47,7 +47,6 @@ class TestParser(unittest.TestCase):
                             transactional=transactional,
                         )
                         self.assertEqual(list(graph), [(s, p, o)])
-                        # TODO: pyoxigraph 0.4.2: test that prefixes are properly loaded
 
     @unittest.skipIf(rdflib_version < (7, 1), "only works in rdflib 7.1+")
     def test_parse_dataset(self):
