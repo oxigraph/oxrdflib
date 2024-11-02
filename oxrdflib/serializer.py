@@ -10,11 +10,11 @@ from oxrdflib.store import OxigraphStore
 
 __all__ = [
     "OxigraphN3Serializer",
-    "OxigraphTurtleSerializer",
+    "OxigraphNQuadsSerializer",
     "OxigraphNTriplesSerializer",
     "OxigraphRdfXmlSerializer",
     "OxigraphTriGSerializer",
-    "OxigraphNQuadsSerializer",
+    "OxigraphTurtleSerializer",
 ]
 
 

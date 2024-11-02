@@ -29,6 +29,10 @@ name = "oxrdflib"
 readme = "README.md"
 requires-python = ">=3.8"
 
+[project.optional-dependencies]
+coverage = ["pytest~=8.0", "pytest-cov>=5,<7"]
+dev = ["requests~=2.0"]
+
 [project.entry-points."rdf.plugins.store"]
 Oxigraph = "oxrdflib.store:OxigraphStore"
 oxigraph = "oxrdflib.store:OxigraphStore"

@@ -14,47 +14,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: 3.13
-          cache: pip
-      - run: pip install --upgrade pre-commit
-      - run: pre-commit run --all-files
+      - uses: astral-sh/setup-uv@v3
+      - run: uv run --with pre-commit pre-commit run --all-files
 
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: 3.13
-          cache: pip
-      - run: pip install . && pip install -r requirements-dev.txt
-      - run: python -m unittest
+      - uses: astral-sh/setup-uv@v3
+      - run: uv run -m unittest
         working-directory: ./tests
 
   test_msv:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: 3.8
-          cache: pip
-      - run: pip install . && pip install -r requirements-dev.txt && pip install 'rdflib==6.3.0'
-      - run: python -m unittest
+      - uses: astral-sh/setup-uv@v3
+      - run: uv run --python 3.8 --resolution lowest-direct -m unittest
         working-directory: ./tests
 
   codecov:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: 3.13
-          cache: pip
-      - run: pip install -e . && pip install pytest pytest-cov -r requirements-dev.txt
-      - run: pytest --cov --cov-report=xml
+      - uses: astral-sh/setup-uv@v3
+      - run: uv run --extra coverage pytest --cov --cov-report=xml
       - uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -69,10 +53,6 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: 3.13
-          cache: pip
-      - run: pip install build
-      - run: python -m build --sdist --wheel --outdir dist/ .
+      - uses: astral-sh/setup-uv@v3
+      - run: uv run --with build -m build --sdist --wheel --outdir dist/ .
       - uses: pypa/gh-action-pypi-publish@release/v1
