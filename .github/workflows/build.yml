@@ -9,27 +9,30 @@ on:
     types:
       - published
 
+env:
+  UV_SYSTEM_PYTHON: 1
+
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
       - uses: actions/setup-python@v5
         with:
-          python-version: 3.13
-          cache: pip
-      - run: pip install --upgrade pre-commit
+          python-version-file: "pyproject.toml"
+      - run: uv pip install --upgrade pre-commit
       - run: pre-commit run --all-files
 
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
       - uses: actions/setup-python@v5
         with:
-          python-version: 3.13
-          cache: pip
-      - run: pip install . && pip install -r requirements-dev.txt
+          python-version-file: "pyproject.toml"
+      - run: uv sync
       - run: python -m unittest
         working-directory: ./tests
 
@@ -37,11 +40,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
       - uses: actions/setup-python@v5
         with:
           python-version: 3.8
           cache: pip
-      - run: pip install . && pip install -r requirements-dev.txt && pip install 'rdflib==6.3.0'
+      - run: uv sync --resolution lowest-direct
       - run: python -m unittest
         working-directory: ./tests
 
@@ -49,11 +53,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
       - uses: actions/setup-python@v5
         with:
-          python-version: 3.13
-          cache: pip
-      - run: pip install -e . && pip install pytest pytest-cov -r requirements-dev.txt
+          python-version-file: "pyproject.toml"
+      - run: uv sync --extra coverage
       - run: pytest --cov --cov-report=xml
       - uses: codecov/codecov-action@v4
         with:
@@ -69,10 +73,10 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
       - uses: actions/setup-python@v5
         with:
-          python-version: 3.13
-          cache: pip
-      - run: pip install build
+          python-version-file: "pyproject.toml"
+      - run: uv pip install build
       - run: python -m build --sdist --wheel --outdir dist/ .
       - uses: pypa/gh-action-pypi-publish@release/v1
