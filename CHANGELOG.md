@@ -1,10 +1,15 @@
-## unreleased
+## [0.4.0] - 2024-11-02
 
 ### Added
-- Oxigraph native parsers for N-Triples, Turtle and RDF/XML.
+- Oxigraph native parsers and serializers for N-Triples, N-Quads, Turtle, TriG, N3 and RDF/XML.
 
-### Improved
-- Restructured the codebase to account for further additions of parsers and serializers.
+### Removed
+- `OxMemory` and `OxSled` aliases.
+
+### Changed
+- Upgrades pyoxigraph to 0.4.
+- `Dataset` `update` evaluation is now done using pyoxigraph and not rdflib.
+- Restructures the codebase to account for further additions of parsers and serializers.
 
 
 ## [0.3.7] - 2024-03-30
