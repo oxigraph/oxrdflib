@@ -17,11 +17,11 @@ from oxrdflib.store import OxigraphStore
 
 __all__ = [
     "OxigraphN3Parser",
-    "OxigraphTurtleParser",
+    "OxigraphNQuadsParser",
     "OxigraphNTriplesParser",
     "OxigraphRdfXmlParser",
     "OxigraphTriGParser",
-    "OxigraphNQuadsParser",
+    "OxigraphTurtleParser",
 ]
 
 
