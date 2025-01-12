@@ -14,14 +14,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v3
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
       - run: uv run --with pre-commit pre-commit run --all-files
 
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v3
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
       - run: uv run -m unittest
         working-directory: ./tests
 
@@ -29,7 +33,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v3
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
       - run: uv run --python 3.8 --resolution lowest-direct -m unittest
         working-directory: ./tests
 
@@ -37,7 +43,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v3
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
       - run: uv run --extra coverage pytest --cov --cov-report=xml
       - uses: codecov/codecov-action@v5
         with:
@@ -53,6 +61,6 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v4
-      - uses: astral-sh/setup-uv@v3
+      - uses: astral-sh/setup-uv@v5
       - run: uv run --with build -m build --sdist --wheel --outdir dist/ .
       - uses: pypa/gh-action-pypi-publish@release/v1
