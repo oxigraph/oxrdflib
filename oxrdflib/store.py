@@ -142,15 +142,11 @@ class OxigraphStore(Store):
             raise NotImplementedError
         init_ns = dict(self._namespace_for_prefix, **initNs)
         query = "".join(f"PREFIX {prefix}: <{namespace}>\n" for prefix, namespace in init_ns.items()) + query
-        if initBindings:
-            query += "\nVALUES ( {} ) {{ ({}) }}".format(
-                " ".join(f"?{k}" for k in initBindings),
-                " ".join(v.n3() for v in initBindings.values()),
-            )
         result = self._inner.query(
             query,
             use_default_graph_as_union=queryGraph == "__UNION__",
             default_graph=(to_ox(queryGraph) if isinstance(queryGraph, Node) else None),
+            substitutions={ox.Variable(k): to_ox(v) for k, v in initBindings.items()},
         )
         if isinstance(result, ox.QueryBoolean):
             out = Result("ASK")
