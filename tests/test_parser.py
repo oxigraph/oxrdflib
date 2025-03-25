@@ -16,7 +16,7 @@ g = URIRef("http://example.com/g")
 
 
 class TestParser(unittest.TestCase):
-    def test_parse_graph(self):
+    def test_parse_graph(self) -> None:
         for store in ("default", "oxigraph"):
             for transactional in (True, False):
                 for fmt, serialization in (
@@ -49,7 +49,7 @@ class TestParser(unittest.TestCase):
                         self.assertEqual(list(graph), [(s, p, o)])
 
     @unittest.skipIf(rdflib_version < (7, 1), "only works in rdflib 7.1+")
-    def test_parse_dataset(self):
+    def test_parse_dataset(self) -> None:
         for store in ("default", "oxigraph"):
             for transactional in (True, False):
                 for fmt, serialization in (

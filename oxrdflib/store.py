@@ -1,4 +1,5 @@
 import shutil
+from pathlib import Path
 from typing import (
     Any,
     Dict,
@@ -42,15 +43,18 @@ class OxigraphStore(Store):
         identifier: Optional[Identifier] = None,
         *,
         store: Optional[ox.Store] = None,
-    ):
+    ) -> None:
         self._store = store
         self._prefix_for_namespace: Dict[URIRef, str] = {}
         self._namespace_for_prefix: Dict[str, URIRef] = {}
         super().__init__(configuration, identifier)
 
-    def open(self, configuration: str, create: bool = False) -> Optional[int]:  # noqa: ARG002
+    def open(self, configuration: str, create: bool = False) -> Optional[int]:
+        path = Path(configuration)
         if self._store is not None:
             raise ValueError("The open function should be called before any RDF operation")
+        if create and path.exists():
+            raise ValueError(f"The directory {configuration} already exist")
         self._store = ox.Store(configuration)
         return VALID_STORE
 
@@ -119,8 +123,8 @@ class OxigraphStore(Store):
                     **(
                         {"use_default_graph_as_union": True} if context is None else {"default_graph": to_ox(context)}  # type: ignore[dict-item]
                     ),
-                )
-            )[0].value
+                ),
+            )[0].value,
         )
 
     def contexts(self, triple: Optional[_Triple] = None) -> Generator[Graph, None, None]:
@@ -136,7 +140,7 @@ class OxigraphStore(Store):
         initNs: Mapping[str, Any],  # noqa: N803
         initBindings: Mapping[str, Identifier],  # noqa: N803
         queryGraph: str,  # noqa: N803
-        **kwargs: Any,
+        **kwargs: object,
     ) -> "Result":
         if isinstance(query, Query) or kwargs:
             raise NotImplementedError
@@ -169,7 +173,7 @@ class OxigraphStore(Store):
         initNs: Mapping[str, Any],  # noqa: N803
         initBindings: Mapping[str, Identifier],  # noqa: N803
         queryGraph: str,  # noqa: N803
-        **kwargs: Any,  # noqa: ARG002
+        **kwargs: object,
     ) -> None:
         init_ns = dict(self._namespace_for_prefix, **initNs)
         update = "".join(f"PREFIX {prefix}: <{namespace}>\n" for prefix, namespace in init_ns.items()) + update
@@ -177,6 +181,8 @@ class OxigraphStore(Store):
             raise NotImplementedError("initBindings are not supported by Oxigraph store")
         if queryGraph != DATASET_DEFAULT_GRAPH_ID:
             raise NotImplementedError(f"Only {DATASET_DEFAULT_GRAPH_ID} is supported by native Oxigraph store")
+        for kwarg in kwargs:
+            raise NotImplementedError(f"The paramter {kwarg} is not supported by Oxigraph store")
         self._inner.update(update)
 
     def commit(self) -> None:
@@ -201,14 +207,14 @@ class OxigraphStore(Store):
         self._namespace_for_prefix[prefix] = namespace
         self._prefix_for_namespace[namespace] = prefix
 
-    def _delete_from_prefix(self, prefix):
+    def _delete_from_prefix(self, prefix: str) -> None:
         if prefix not in self._namespace_for_prefix:
             return
         namespace = self._namespace_for_prefix[prefix]
         del self._namespace_for_prefix[prefix]
         self._delete_from_namespace(namespace)
 
-    def _delete_from_namespace(self, namespace):
+    def _delete_from_namespace(self, namespace: str) -> None:
         if namespace not in self._prefix_for_namespace:
             return
         prefix = self._prefix_for_namespace[namespace]

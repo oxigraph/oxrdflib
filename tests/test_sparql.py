@@ -10,7 +10,7 @@ rdflib_version = tuple(int(e) for e in rdflib.__version__.split(".")[:2])
 
 
 class SparqlTestCase(unittest.TestCase):
-    def test_ask_query(self):
+    def test_ask_query(self) -> None:
         g = ConjunctiveGraph("Oxigraph")
         g.add((EX.foo, RDF.type, EX.Entity))
         g.bind("ex", EX)
@@ -32,7 +32,7 @@ class SparqlTestCase(unittest.TestCase):
         g1.add((EX.foo, RDF.type, EX.Entity))
         self.assertTrue(g1.query("ASK { ?s ?p ?o }"))
 
-    def test_select_query_graph(self):
+    def test_select_query_graph(self) -> None:
         g = Graph("Oxigraph")
         g.add((EX.foo, RDF.type, EX.Entity))
         result = g.query("SELECT ?s WHERE { ?s ?p ?o }")
@@ -44,7 +44,7 @@ class SparqlTestCase(unittest.TestCase):
             },
         )
 
-    def test_select_query_conjunctive(self):
+    def test_select_query_conjunctive(self) -> None:
         g = ConjunctiveGraph("Oxigraph")
         g.add((EX.foo, RDF.type, EX.Entity))
         result = g.query("SELECT ?s WHERE { ?s ?p ?o }")
@@ -57,7 +57,7 @@ class SparqlTestCase(unittest.TestCase):
         )
 
     @unittest.skipIf(rdflib_version < (7, 1), "only works in rdflib 7.1+")
-    def test_select_query_dataset(self):
+    def test_select_query_dataset(self) -> None:
         g = Dataset("Oxigraph")
         g.add((EX.foo, RDF.type, EX.Entity))
         result = g.query("SELECT ?s WHERE { ?s ?p ?o }")
@@ -69,7 +69,7 @@ class SparqlTestCase(unittest.TestCase):
             },
         )
 
-    def test_select_query_dataset_default_union(self):
+    def test_select_query_dataset_default_union(self) -> None:
         g = Dataset("Oxigraph", default_union=True)
         g.add((EX.foo, RDF.type, EX.Entity, EX.graph))
         result = g.query("SELECT ?s WHERE { ?s ?p ?o }")
@@ -81,7 +81,7 @@ class SparqlTestCase(unittest.TestCase):
             },
         )
 
-    def test_construct_query(self):
+    def test_construct_query(self) -> None:
         g = ConjunctiveGraph("Oxigraph")
         g.add((EX.foo, RDF.type, EX.Entity))
         result = g.query("CONSTRUCT WHERE { ?s ?p ?o }")
@@ -90,7 +90,7 @@ class SparqlTestCase(unittest.TestCase):
             b"<http://example.com/foo> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.com/Entity> .",
         )
 
-    def test_select_query_init_bindings(self):
+    def test_select_query_init_bindings(self) -> None:
         g = Graph("Oxigraph")
         result = g.query("SELECT ?s WHERE {}", initBindings={"s": EX.foo})
         self.assertEqual(
@@ -101,7 +101,7 @@ class SparqlTestCase(unittest.TestCase):
             },
         )
 
-    def test_select_query_init_namespace(self):
+    def test_select_query_init_namespace(self) -> None:
         g = Graph("Oxigraph")
         result = g.query("SELECT (ex:foo AS ?s) WHERE {}", initNs={"ex": "http://example.com/"})
         self.assertEqual(
@@ -112,31 +112,31 @@ class SparqlTestCase(unittest.TestCase):
             },
         )
 
-    def test_insert_where_update_graph(self):
+    def test_insert_where_update_graph(self) -> None:
         g = Graph("Oxigraph")
         g.add((EX.foo, RDF.type, EX.Entity))
         g.update("INSERT { ?s a <http://example.com/Entity2> } WHERE { ?s a <http://example.com/Entity> }")
         self.assertIn((EX.foo, RDF.type, EX.Entity2), g)
 
-    def test_insert_where_update_conjunctive_graph(self):
+    def test_insert_where_update_conjunctive_graph(self) -> None:
         g = ConjunctiveGraph("Oxigraph")
         g.add((EX.foo, RDF.type, EX.Entity, EX.g))
         g.update("INSERT { ?s a <http://example.com/Entity2> } WHERE { ?s a <http://example.com/Entity> }")
         self.assertIn((EX.foo, RDF.type, EX.Entity2), g)
 
-    def test_insert_where_update_dataset_named_graph(self):
+    def test_insert_where_update_dataset_named_graph(self) -> None:
         g = Dataset("Oxigraph")
         g.add((EX.foo, RDF.type, EX.Entity, EX.g))
         g.update("INSERT { ?s a <http://example.com/Entity2> } WHERE { GRAPH ?g { ?s a <http://example.com/Entity> } }")
         self.assertIn((EX.foo, RDF.type, EX.Entity2, g.identifier), g)
 
-    def test_insert_where_update_dataset_default_graph(self):
+    def test_insert_where_update_dataset_default_graph(self) -> None:
         g = Dataset("Oxigraph")
         g.add((EX.foo, RDF.type, EX.Entity))
         g.update("INSERT { ?s a <http://example.com/Entity2> } WHERE { ?s a <http://example.com/Entity> }")
         self.assertIn((EX.foo, RDF.type, EX.Entity2, g.identifier), g)
 
-    def test_insert_where_update_dataset_default_union(self):
+    def test_insert_where_update_dataset_default_union(self) -> None:
         g = Dataset("Oxigraph", default_union=True)
         g.add((EX.foo, RDF.type, EX.Entity, EX.g))
         g.update("INSERT { ?s a <http://example.com/Entity2> } WHERE { ?s a <http://example.com/Entity> }")

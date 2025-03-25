@@ -41,7 +41,7 @@ from rdflib import Graph, URIRef
 
 
 class GraphTestCase(unittest.TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.graph = Graph(store="Oxigraph")
         self.michel = URIRef("urn:michel")
         self.tarek = URIRef("urn:tarek")
@@ -51,7 +51,7 @@ class GraphTestCase(unittest.TestCase):
         self.pizza = URIRef("urn:pizza")
         self.cheese = URIRef("urn:cheese")
 
-    def add_stuff(self):
+    def add_stuff(self) -> None:
         tarek = self.tarek
         michel = self.michel
         bob = self.bob
@@ -65,10 +65,10 @@ class GraphTestCase(unittest.TestCase):
         self.graph.add((michel, likes, pizza))
         self.graph.add((michel, likes, cheese))
         self.graph.addN(
-            [(bob, likes, cheese, self.graph), (bob, hates, pizza, self.graph), (bob, hates, michel, self.graph)]
+            [(bob, likes, cheese, self.graph), (bob, hates, pizza, self.graph), (bob, hates, michel, self.graph)],
         )
 
-    def remove_stuff(self):
+    def remove_stuff(self) -> None:
         tarek = self.tarek
         michel = self.michel
         bob = self.bob
@@ -85,14 +85,14 @@ class GraphTestCase(unittest.TestCase):
         self.graph.remove((bob, hates, pizza))
         self.graph.remove((bob, hates, michel))  # gasp!
 
-    def test_add(self):
+    def test_add(self) -> None:
         self.add_stuff()
 
-    def test_remove(self):
+    def test_remove(self) -> None:
         self.add_stuff()
         self.remove_stuff()
 
-    def test_triples(self):
+    def test_triples(self) -> None:
         tarek = self.tarek
         michel = self.michel
         bob = self.bob
@@ -141,7 +141,7 @@ class GraphTestCase(unittest.TestCase):
         self.remove_stuff()
         self.assertEqual(len(list(triples((None, None, None)))), 0)
 
-    def test_connected(self):
+    def test_connected(self) -> None:
         graph = self.graph
         self.add_stuff()
         self.assertEqual(True, graph.connected())
@@ -153,7 +153,7 @@ class GraphTestCase(unittest.TestCase):
 
         self.assertEqual(False, graph.connected())
 
-    def test_sub(self):
+    def test_sub(self) -> None:
         g1 = self.graph
         g2 = Graph(store=g1.store)
 
@@ -184,7 +184,7 @@ class GraphTestCase(unittest.TestCase):
 
         self.assertEqual((bob, likes, cheese) in g1, False)
 
-    def test_graph_add(self):
+    def test_graph_add(self) -> None:
         g1 = self.graph
         g2 = Graph(store=g1.store)
 
@@ -214,7 +214,7 @@ class GraphTestCase(unittest.TestCase):
 
         self.assertEqual((bob, likes, cheese) in g1, True)
 
-    def test_graph_intersection(self):
+    def test_graph_intersection(self) -> None:
         g1 = self.graph
         g2 = Graph(store=g1.store)
 
