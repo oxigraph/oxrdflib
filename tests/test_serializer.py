@@ -9,7 +9,7 @@ g = URIRef("http://example.com/g")
 
 
 class TestSerializer(unittest.TestCase):
-    def test_serialize_graph(self):
+    def test_serialize_graph(self) -> None:
         for store in ("default", "oxigraph"):
             for fmt, serialization in (
                 ("ox-turtle", "<s> v:p <o> .\n"),
@@ -36,7 +36,7 @@ class TestSerializer(unittest.TestCase):
                     graph.bind("v", "http://example.com/vocab#")
                     self.assertTrue(graph.serialize(format=fmt).endswith(serialization))
 
-    def test_serialize_dataset(self):
+    def test_serialize_dataset(self) -> None:
         for store in ("default", "oxigraph"):
             for fmt, serialization in (
                 (

@@ -10,7 +10,8 @@ from oxrdflib._type import _Quad, _Triple, _TriplePattern
 
 
 def to_ox(
-    term: Optional[Union[Node, _Triple, _Quad, Graph]], context: Optional[Graph] = None
+    term: Optional[Union[Node, _Triple, _Quad, Graph]],
+    context: Optional[Graph] = None,
 ) -> Optional[Union[ox.NamedNode, ox.BlankNode, ox.Literal, ox.DefaultGraph, ox.Quad]]:
     """Convert an rdflib term to an Oxigraph term."""
     if term is None:
@@ -47,9 +48,15 @@ def to_ox(
     raise ValueError(f"Unexpected rdflib term: {term!r}")
 
 
-def to_ox_quad_pattern(triple: _TriplePattern, context: Optional[Graph] = None):
+def to_ox_quad_pattern(
+    triple: _TriplePattern, context: Optional[Graph] = None
+) -> Tuple[
+    Optional[Union[ox.NamedNode, ox.BlankNode]],
+    Optional[ox.NamedNode],
+    Optional[Union[ox.NamedNode, ox.BlankNode, ox.Literal]],
+    Optional[Union[ox.NamedNode, ox.BlankNode, ox.DefaultGraph]],
+]:
     """Convert an rdflib quad pattern to an Oxigraph quad pattern."""
-
     (s, p, o) = triple
     return (
         to_ox_term_pattern(s),

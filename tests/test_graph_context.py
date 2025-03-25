@@ -41,7 +41,7 @@ from rdflib import BNode, ConjunctiveGraph, Graph, URIRef
 
 
 class ContextTestCase(unittest.TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.graph = ConjunctiveGraph(store="Oxigraph")
         self.michel = URIRef("urn:michel")
         self.tarek = URIRef("urn:tarek")
@@ -57,7 +57,7 @@ class ContextTestCase(unittest.TestCase):
         # delete the graph for each test!
         self.graph.remove((None, None, None))
 
-    def add_stuff(self):
+    def add_stuff(self) -> None:
         tarek = self.tarek
         michel = self.michel
         bob = self.bob
@@ -74,7 +74,7 @@ class ContextTestCase(unittest.TestCase):
         graph.add((michel, likes, cheese))
         self.graph.addN([(bob, likes, cheese, graph), (bob, hates, pizza, graph), (bob, hates, michel, graph)])
 
-    def remove_stuff(self):
+    def remove_stuff(self) -> None:
         tarek = self.tarek
         michel = self.michel
         bob = self.bob
@@ -93,7 +93,7 @@ class ContextTestCase(unittest.TestCase):
         graph.remove((bob, hates, pizza))
         graph.remove((bob, hates, michel))  # gasp!
 
-    def add_stuff_in_multiple_contexts(self):
+    def add_stuff_in_multiple_contexts(self) -> None:
         c1 = self.c1
         c2 = self.c2
         triple = (self.pizza, self.hates, self.tarek)  # revenge!
@@ -107,7 +107,7 @@ class ContextTestCase(unittest.TestCase):
         graph = Graph(self.graph.store, c2)
         graph.add(triple)
 
-    def test_conjunction(self):
+    def test_conjunction(self) -> None:
         self.add_stuff_in_multiple_contexts()
         triple = (self.pizza, self.likes, self.pizza)
         # add to context 1
@@ -115,14 +115,14 @@ class ContextTestCase(unittest.TestCase):
         graph.add(triple)
         self.assertEqual(len(self.graph), len(graph))
 
-    def test_add(self):
+    def test_add(self) -> None:
         self.add_stuff()
 
-    def test_remove(self):
+    def test_remove(self) -> None:
         self.add_stuff()
         self.remove_stuff()
 
-    def test_len_in_one_context(self):
+    def test_len_in_one_context(self) -> None:
         c1 = self.c1
         # make sure context is empty
 
@@ -138,7 +138,7 @@ class ContextTestCase(unittest.TestCase):
         self.assertEqual(len(self.graph), old_len)
         self.assertEqual(len(graph), 0)
 
-    def test_len_in_multiple_contexts(self):
+    def test_len_in_multiple_contexts(self) -> None:
         old_len = len(self.graph)
         self.add_stuff_in_multiple_contexts()
 
@@ -149,7 +149,7 @@ class ContextTestCase(unittest.TestCase):
         graph = Graph(self.graph.store, self.c1)
         self.assertEqual(len(graph), old_len + 1)
 
-    def test_remove_in_multiple_contexts(self):
+    def test_remove_in_multiple_contexts(self) -> None:
         c1 = self.c1
         c2 = self.c2
         triple = (self.pizza, self.hates, self.tarek)  # revenge!
@@ -173,12 +173,12 @@ class ContextTestCase(unittest.TestCase):
         self.graph.remove(triple)
         self.assertTrue(triple not in self.graph)
 
-    def test_contexts(self):
+    def test_contexts(self) -> None:
         triple = (self.pizza, self.hates, self.tarek)  # revenge!
 
         self.add_stuff_in_multiple_contexts()
 
-        def cid(c):
+        def cid(c: URIRef) -> str:
             return c.identifier
 
         self.assertTrue(self.c1 in map(cid, self.graph.contexts()))
@@ -188,7 +188,7 @@ class ContextTestCase(unittest.TestCase):
         self.assertTrue(self.c1 in context_list, (self.c1, context_list))
         self.assertTrue(self.c2 in context_list, (self.c2, context_list))
 
-    def test_remove_context(self):
+    def test_remove_context(self) -> None:
         c1 = self.c1
 
         self.add_stuff_in_multiple_contexts()
@@ -198,12 +198,12 @@ class ContextTestCase(unittest.TestCase):
         self.graph.remove_context(self.graph.get_context(c1))
         self.assertTrue(self.c1 not in self.graph.contexts())
 
-    def test_remove_any(self):
+    def test_remove_any(self) -> None:
         self.add_stuff_in_multiple_contexts()
         self.graph.remove((None, None, None))
         self.assertEqual(len(self.graph), 0)
 
-    def test_triples(self):
+    def test_triples(self) -> None:
         tarek = self.tarek
         michel = self.michel
         bob = self.bob

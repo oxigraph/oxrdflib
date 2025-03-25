@@ -42,7 +42,7 @@ from rdflib.graph import DATASET_DEFAULT_GRAPH_ID
 
 
 class DatasetTestCase(unittest.TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.graph = Dataset(store="Oxigraph")
         self.michel = URIRef("urn:michel")
         self.tarek = URIRef("urn:tarek")
@@ -63,10 +63,10 @@ class DatasetTestCase(unittest.TestCase):
             self.assertEqual(len(c), 0)
             self.graph.remove_graph(c)
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         self.graph.close()
 
-    def test_graph_aware(self):
+    def test_graph_aware(self) -> None:
         if not self.graph.store.graph_aware:
             return
 
@@ -112,7 +112,7 @@ class DatasetTestCase(unittest.TestCase):
             {DATASET_DEFAULT_GRAPH_ID},
         )
 
-    def test_default_graph(self):
+    def test_default_graph(self) -> None:
         self.graph.add((self.tarek, self.likes, self.pizza))
         self.assertEqual(len(self.graph), 1)
         # only default exists
@@ -131,7 +131,7 @@ class DatasetTestCase(unittest.TestCase):
             {DATASET_DEFAULT_GRAPH_ID},
         )
 
-    def test_not_union(self):
+    def test_not_union(self) -> None:
         g1 = self.graph.graph(self.c1)
         g1.add((self.tarek, self.likes, self.pizza))
 
