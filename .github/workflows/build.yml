@@ -15,8 +15,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
-        with:
-          enable-cache: true
       - run: uv run --with pre-commit pre-commit run --all-files
 
   test:
@@ -24,8 +22,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
-        with:
-          enable-cache: true
       - run: uv run -m unittest
         working-directory: ./tests
 
@@ -34,8 +30,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
-        with:
-          enable-cache: true
       - run: uv run --python 3.8 --resolution lowest-direct -m unittest
         working-directory: ./tests
 
@@ -44,8 +38,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
-        with:
-          enable-cache: true
       - run: uv run --group coverage pytest --cov --cov-report=xml
       - uses: codecov/codecov-action@v5
         with:
