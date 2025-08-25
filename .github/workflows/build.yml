@@ -13,14 +13,14 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: astral-sh/setup-uv@v6
       - run: uv run --with pre-commit pre-commit run --all-files
 
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: astral-sh/setup-uv@v6
       - run: uv run -m unittest
         working-directory: ./tests
@@ -28,7 +28,7 @@ jobs:
   test_msv:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: astral-sh/setup-uv@v6
       - run: uv run --python 3.8 --resolution lowest-direct -m unittest
         working-directory: ./tests
@@ -36,7 +36,7 @@ jobs:
   codecov:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: astral-sh/setup-uv@v6
       - run: uv run --group coverage pytest --cov --cov-report=xml
       - uses: codecov/codecov-action@v5
@@ -52,7 +52,7 @@ jobs:
     permissions:
       id-token: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: astral-sh/setup-uv@v6
       - run: uv run --with build -m build --sdist --wheel --outdir dist/ .
       - uses: pypa/gh-action-pypi-publish@release/v1
