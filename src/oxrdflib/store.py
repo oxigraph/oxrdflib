@@ -142,14 +142,15 @@ class OxigraphStore(Store):
         queryGraph: str,  # noqa: N803
         **kwargs: object,
     ) -> "Result":
-        if isinstance(query, Query) or kwargs:
-            raise NotImplementedError
-        init_ns = dict(self._namespace_for_prefix, **initNs)
-        query = "".join(f"PREFIX {prefix}: <{namespace}>\n" for prefix, namespace in init_ns.items()) + query
+        if isinstance(query, Query):
+            raise NotImplementedError("The already parsed Queries are not supported by Oxigraph store")
+        for kwarg in kwargs:
+            raise NotImplementedError(f"The parameter {kwarg} is not supported by Oxigraph store")
         result = self._inner.query(
             query,
             use_default_graph_as_union=queryGraph == "__UNION__",
             default_graph=(to_ox(queryGraph) if isinstance(queryGraph, Node) else None),
+            prefixes=dict(self._namespace_for_prefix, **initNs),
             substitutions={ox.Variable(k): to_ox(v) for k, v in initBindings.items()},
         )
         if isinstance(result, ox.QueryBoolean):
@@ -175,15 +176,15 @@ class OxigraphStore(Store):
         queryGraph: str,  # noqa: N803
         **kwargs: object,
     ) -> None:
-        init_ns = dict(self._namespace_for_prefix, **initNs)
-        update = "".join(f"PREFIX {prefix}: <{namespace}>\n" for prefix, namespace in init_ns.items()) + update
         if initBindings:
             raise NotImplementedError("initBindings are not supported by Oxigraph store")
         if queryGraph != DATASET_DEFAULT_GRAPH_ID:
             raise NotImplementedError(f"Only {DATASET_DEFAULT_GRAPH_ID} is supported by native Oxigraph store")
+        if isinstance(update, Update):
+            raise NotImplementedError("The already parsed Updates are not supported by Oxigraph store")
         for kwarg in kwargs:
-            raise NotImplementedError(f"The paramter {kwarg} is not supported by Oxigraph store")
-        self._inner.update(update)
+            raise NotImplementedError(f"The parameter {kwarg} is not supported by Oxigraph store")
+        self._inner.update(update, prefixes=dict(self._namespace_for_prefix, **initNs))
 
     def commit(self) -> None:
         # TODO: implement
