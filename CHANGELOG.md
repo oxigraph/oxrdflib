@@ -1,3 +1,14 @@
+## [0.5.0] - 2025-09-13
+
+### Added
+- Add JSON-LD support with `ox-json-ld` and `ox-streaming-json-ld` formats.
+
+### Changed
+- Upgrades pyoxigraph to 0.5.
+- `Store.query`: use Oxigraph substitution approach instead of trailing `VALUES` close. This makes the `Oxigraph` store behavior closer than regular rdflib.
+- `Store.query` and `Store.update` use Oxigraph `prefixes` parameter to inject default prefixes.
+
+
 ## [0.4.0] - 2024-11-02
 
 ### Added

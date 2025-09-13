@@ -22,7 +22,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Database :: Database Engines/Servers",
 ]
-dependencies = ["pyoxigraph~=0.5.0-beta.4", "rdflib>=6.3,<8.0"]
+dependencies = ["pyoxigraph~=0.5.0", "rdflib>=6.3,<8.0"]
 license = { text = "BSD-3-Clause" }
 name = "oxrdflib"
 maintainers = [
@@ -30,7 +30,7 @@ maintainers = [
 ]
 readme = "README.md"
 requires-python = ">=3.8"
-version = "0.5.0-dev"
+version = "0.5.0"
 
 [dependency-groups]
 coverage = ["pytest~=8.0", "pytest-cov>=5,<7"]
