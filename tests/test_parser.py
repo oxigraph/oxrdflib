@@ -20,6 +20,11 @@ class TestParser(unittest.TestCase):
         for store in ("default", "oxigraph"):
             for transactional in (True, False):
                 for fmt, serialization in (
+                    ("ox-json-ld", '{"@context":{"v":"http://example.com/vocab#"},"@id":"s","v:p":{"@id":"o"}}'),
+                    (
+                        "ox-streaming-json-ld",
+                        '{"@context":{"v":"http://example.com/vocab#"},"@id":"s","v:p":{"@id":"o"}}',
+                    ),
                     ("ox-turtle", "@prefix v: <http://example.com/vocab#> . <s> v:p <o> ."),
                     ("ox-ttl", "@prefix v: <http://example.com/vocab#> . <s> v:p <o> ."),
                     ("ox-ntriples", "<http://example.com/s> <http://example.com/vocab#p> <http://example.com/o> .\n"),

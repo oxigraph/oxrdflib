@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Final, Optional
 
 from pyoxigraph import DefaultGraph, RdfFormat, parse
 from rdflib import Graph
@@ -16,10 +16,12 @@ from oxrdflib._converter import from_ox, from_ox_graph_name, to_ox
 from oxrdflib.store import OxigraphStore
 
 __all__ = [
+    "OxigraphJsonLdParser",
     "OxigraphN3Parser",
     "OxigraphNQuadsParser",
     "OxigraphNTriplesParser",
     "OxigraphRdfXmlParser",
+    "OxigraphStreamingJsonLdParser",
     "OxigraphTriGParser",
     "OxigraphTurtleParser",
 ]
@@ -73,25 +75,33 @@ class _OxigraphParser(Parser, ABC):
         pass
 
 
+class OxigraphJsonLdParser(_OxigraphParser):
+    _format: Final = RdfFormat.JSON_LD
+
+
+class OxigraphStreamingJsonLdParser(_OxigraphParser):
+    _format: Final = RdfFormat.STREAMING_JSON_LD
+
+
 class OxigraphTurtleParser(_OxigraphParser):
-    _format = RdfFormat.TURTLE
+    _format: Final = RdfFormat.TURTLE
 
 
 class OxigraphNTriplesParser(_OxigraphParser):
-    _format = RdfFormat.N_TRIPLES
+    _format: Final = RdfFormat.N_TRIPLES
 
 
 class OxigraphRdfXmlParser(_OxigraphParser):
-    _format = RdfFormat.RDF_XML
+    _format: Final = RdfFormat.RDF_XML
 
 
 class OxigraphN3Parser(_OxigraphParser):
-    _format = RdfFormat.N3
+    _format: Final = RdfFormat.N3
 
 
 class OxigraphNQuadsParser(_OxigraphParser):
-    _format = RdfFormat.N_QUADS
+    _format: Final = RdfFormat.N_QUADS
 
 
 class OxigraphTriGParser(_OxigraphParser):
-    _format = RdfFormat.TRIG
+    _format: Final = RdfFormat.TRIG

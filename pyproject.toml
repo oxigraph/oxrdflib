@@ -17,6 +17,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "License :: OSI Approved :: BSD License",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Database :: Database Engines/Servers",
@@ -40,6 +41,8 @@ Oxigraph = "oxrdflib.store:OxigraphStore"
 oxigraph = "oxrdflib.store:OxigraphStore"
 
 [project.entry-points."rdf.plugins.parser"]
+ox-json-ld = "oxrdflib.parser:OxigraphJsonLdParser"
+ox-streaming-json-ld = "oxrdflib.parser:OxigraphStreamingJsonLdParser"
 ox-turtle = "oxrdflib.parser:OxigraphTurtleParser"
 ox-ttl = "oxrdflib.parser:OxigraphTurtleParser"
 ox-n3 = "oxrdflib.parser:OxigraphN3Parser"
@@ -52,6 +55,8 @@ ox-trig = "oxrdflib.parser:OxigraphTriGParser"
 ox-xml = "oxrdflib.parser:OxigraphRdfXmlParser"
 
 [project.entry-points."rdf.plugins.serializer"]
+ox-json-ld = "oxrdflib.serializer:OxigraphJsonLdSerializer"
+ox-streaming-json-ld = "oxrdflib.serializer:OxigraphJsonLdSerializer"
 ox-turtle = "oxrdflib.serializer:OxigraphTurtleSerializer"
 ox-ttl = "oxrdflib.serializer:OxigraphTurtleSerializer"
 ox-n3 = "oxrdflib.serializer:OxigraphN3Serializer"

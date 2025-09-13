@@ -12,6 +12,14 @@ class TestSerializer(unittest.TestCase):
     def test_serialize_graph(self) -> None:
         for store in ("default", "oxigraph"):
             for fmt, serialization in (
+                (
+                    "ox-json-ld",
+                    '[{"@id":"http://example.com/s","http://example.com/vocab#p":[{"@id":"http://example.com/o"}]}]',
+                ),
+                (
+                    "ox-streaming-json-ld",
+                    '[{"@id":"http://example.com/s","http://example.com/vocab#p":[{"@id":"http://example.com/o"}]}]',
+                ),
                 ("ox-turtle", "<s> v:p <o> .\n"),
                 ("ox-ttl", "<s> v:p <o> .\n"),
                 ("ox-ntriples", "<http://example.com/s> <http://example.com/vocab#p> <http://example.com/o> .\n"),
@@ -39,6 +47,10 @@ class TestSerializer(unittest.TestCase):
     def test_serialize_dataset(self) -> None:
         for store in ("default", "oxigraph"):
             for fmt, serialization in (
+                (
+                    "ox-json-ld",
+                    '[{"@id":"http://example.com/g","@graph":[{"@id":"http://example.com/s","http://example.com/vocab#p":[{"@id":"http://example.com/o"}]}]}]',
+                ),
                 (
                     "ox-nquads",
                     "<http://example.com/s> <http://example.com/vocab#p> "
