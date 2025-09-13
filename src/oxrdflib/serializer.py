@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import IO, Optional
+from typing import IO, Final, Optional
 
 from pyoxigraph import RdfFormat, serialize
 from rdflib import Dataset
@@ -9,6 +9,7 @@ from oxrdflib._converter import to_ox
 from oxrdflib.store import OxigraphStore
 
 __all__ = [
+    "OxigraphJsonLdSerializer",
     "OxigraphN3Serializer",
     "OxigraphNQuadsSerializer",
     "OxigraphNTriplesSerializer",
@@ -47,25 +48,29 @@ class _OxigraphSerializer(Serializer, ABC):
         pass
 
 
+class OxigraphJsonLdSerializer(_OxigraphSerializer):
+    _format: Final = RdfFormat.JSON_LD
+
+
 class OxigraphN3Serializer(_OxigraphSerializer):
-    _format = RdfFormat.N3
+    _format: Final = RdfFormat.N3
 
 
 class OxigraphTurtleSerializer(_OxigraphSerializer):
-    _format = RdfFormat.TURTLE
+    _format: Final = RdfFormat.TURTLE
 
 
 class OxigraphNTriplesSerializer(_OxigraphSerializer):
-    _format = RdfFormat.N_TRIPLES
+    _format: Final = RdfFormat.N_TRIPLES
 
 
 class OxigraphRdfXmlSerializer(_OxigraphSerializer):
-    _format = RdfFormat.RDF_XML
+    _format: Final = RdfFormat.RDF_XML
 
 
 class OxigraphNQuadsSerializer(_OxigraphSerializer):
-    _format = RdfFormat.N_QUADS
+    _format: Final = RdfFormat.N_QUADS
 
 
 class OxigraphTriGSerializer(_OxigraphSerializer):
-    _format = RdfFormat.TRIG
+    _format: Final = RdfFormat.TRIG

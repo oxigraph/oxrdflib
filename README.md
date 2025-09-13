@@ -93,7 +93,9 @@ The following formats are supported:
 - `ox-nquads` (`ox-nq`)
 - `ox-turtle` (`ox-ttl`)
 - `ox-trig`
+- `ox-n3`
 - `ox-xml`
+- `ox-json-ld` (`ox-streaming-json-ld` for streaming JSON-LD, note that only JSON-LD 1.0 is supported)
 
 Note that Oxigraph parser and serializers are not 1:1 compatible with the rdflib ones and some minor differences exist.
 
