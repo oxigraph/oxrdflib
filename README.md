@@ -104,7 +104,6 @@ if the Oxigraph parsers and serializers are used with the Oxigraph store.
 
 ## Differences with rdflib default store
 - relative IRIs are not supported by Oxigraph.
-- Just like the `SPARQLStore`, Oxigraph joins the `initBindings` parameter of the `query` method after the query has been evaluated, instead of injecting them at the beginning of the query.
 - IRI prefixes set using the `Graph` `bind` method are not persisted on disk but kept in memory. They should be added again each time the store is opened.
 
 ## Migration guide
