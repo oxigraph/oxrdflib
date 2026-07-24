@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
-from typing import Final, Optional
+from typing import Final
 
 from pyoxigraph import DefaultGraph, RdfFormat, parse
 from rdflib import Graph
@@ -33,7 +35,7 @@ class _OxigraphParser(Parser, ABC):
         source: InputSource,
         sink: Graph,
         *,
-        encoding: Optional[str] = "utf-8",
+        encoding: str | None = "utf-8",
         transactional: bool = True,
     ) -> None:
         if encoding not in (None, "utf-8"):

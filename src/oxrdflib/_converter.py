@@ -1,4 +1,4 @@
-from typing import Optional, Tuple, Union
+from __future__ import annotations
 
 import pyoxigraph as ox
 from rdflib import Graph
@@ -10,9 +10,9 @@ from oxrdflib._type import _Quad, _Triple, _TriplePattern
 
 
 def to_ox(
-    term: Optional[Union[Node, _Triple, _Quad, Graph]],
-    context: Optional[Graph] = None,
-) -> Optional[Union[ox.NamedNode, ox.BlankNode, ox.Literal, ox.DefaultGraph, ox.Quad]]:
+    term: Node | _Triple | _Quad | Graph | None,
+    context: Graph | None = None,
+) -> ox.NamedNode | ox.BlankNode | ox.Literal | ox.DefaultGraph | ox.Quad | None:
     """Convert an rdflib term to an Oxigraph term."""
     if term is None:
         return None
@@ -49,12 +49,12 @@ def to_ox(
 
 
 def to_ox_quad_pattern(
-    triple: _TriplePattern, context: Optional[Graph] = None
-) -> Tuple[
-    Optional[Union[ox.NamedNode, ox.BlankNode]],
-    Optional[ox.NamedNode],
-    Optional[Union[ox.NamedNode, ox.BlankNode, ox.Literal]],
-    Optional[Union[ox.NamedNode, ox.BlankNode, ox.DefaultGraph]],
+    triple: _TriplePattern, context: Graph | None = None
+) -> tuple[
+    ox.NamedNode | ox.BlankNode | None,
+    ox.NamedNode | None,
+    ox.NamedNode | ox.BlankNode | ox.Literal | None,
+    ox.NamedNode | ox.BlankNode | ox.DefaultGraph | None,
 ]:
     """Convert an rdflib quad pattern to an Oxigraph quad pattern."""
     (s, p, o) = triple
@@ -67,8 +67,8 @@ def to_ox_quad_pattern(
 
 
 def to_ox_term_pattern(
-    term: Optional[Union[URIRef, BNode, Literal, Graph]],
-) -> Optional[Union[ox.NamedNode, ox.BlankNode, ox.Literal]]:
+    term: URIRef | BNode | Literal | Graph | None,
+) -> ox.NamedNode | ox.BlankNode | ox.Literal | None:
     if term is None:
         return None
     if isinstance(term, URIRef):
@@ -87,7 +87,7 @@ def to_ox_term_pattern(
 
 
 def from_ox_graph_name(
-    graph_name: Union[ox.NamedNode, ox.BlankNode, ox.DefaultGraph],
+    graph_name: ox.NamedNode | ox.BlankNode | ox.DefaultGraph,
     store: Store,
 ) -> Graph:
     if isinstance(graph_name, ox.NamedNode):
@@ -100,8 +100,8 @@ def from_ox_graph_name(
 
 
 def from_ox(
-    term: Optional[Union[ox.NamedNode, ox.BlankNode, ox.Literal, ox.Triple]],
-) -> Optional[Union[Node, Tuple[Node, Node, Node]]]:
+    term: ox.NamedNode | ox.BlankNode | ox.Literal | ox.Triple | None,
+) -> Node | tuple[Node, Node, Node] | None:
     if term is None:
         return None
     if isinstance(term, ox.NamedNode):

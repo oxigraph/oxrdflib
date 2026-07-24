@@ -60,9 +60,11 @@ class TestParser(unittest.TestCase):
                 for fmt, serialization in (
                     (
                         "ox-nquads",
-                        "<http://example.com/s> <http://example.com/vocab#p> <http://example.com/o> .\n"
-                        "<http://example.com/s> <http://example.com/vocab#p> "
-                        "<http://example.com/o> <http://example.com/g> .\n",
+                        (
+                            "<http://example.com/s> <http://example.com/vocab#p> <http://example.com/o> .\n"
+                            "<http://example.com/s> <http://example.com/vocab#p> "
+                            "<http://example.com/o> <http://example.com/g> .\n"
+                        ),
                     ),
                     (
                         "ox-trig",

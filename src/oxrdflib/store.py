@@ -1,15 +1,13 @@
+from __future__ import annotations
+
 import shutil
 from pathlib import Path
 from typing import (
     Any,
-    Dict,
     Generator,
     Iterable,
     Iterator,
     Mapping,
-    Optional,
-    Tuple,
-    Union,
 )
 
 import pyoxigraph as ox
@@ -39,17 +37,17 @@ class OxigraphStore(Store):
 
     def __init__(
         self,
-        configuration: Optional[str] = None,
-        identifier: Optional[Identifier] = None,
+        configuration: str | None = None,
+        identifier: Identifier | None = None,
         *,
-        store: Optional[ox.Store] = None,
+        store: ox.Store | None = None,
     ) -> None:
         self._store = store
-        self._prefix_for_namespace: Dict[URIRef, str] = {}
-        self._namespace_for_prefix: Dict[str, URIRef] = {}
+        self._prefix_for_namespace: dict[URIRef, str] = {}
+        self._namespace_for_prefix: dict[str, URIRef] = {}
         super().__init__(configuration, identifier)
 
-    def open(self, configuration: str, create: bool = False) -> Optional[int]:
+    def open(self, configuration: str, create: bool = False) -> int | None:
         path = Path(configuration)
         if self._store is not None:
             raise ValueError("The open function should be called before any RDF operation")
@@ -58,7 +56,7 @@ class OxigraphStore(Store):
         self._store = ox.Store(configuration)
         return VALID_STORE
 
-    def close(self, commit_pending_transaction: bool = False) -> None:  # noqa: ARG002
+    def close(self, commit_pending_transaction: bool = False) -> None:
         del self._store
 
     def destroy(self, configuration: str) -> None:
@@ -84,7 +82,7 @@ class OxigraphStore(Store):
         self._inner.add(to_ox(triple, context))
         super().add(triple, context, quoted)
 
-    def addN(self, quads: Iterable[_Quad]) -> None:  # noqa: N802
+    def addN(self, quads: Iterable[_Quad]) -> None:
         self._inner.extend([to_ox(q) for q in quads])
         for quad in quads:
             (s, p, o, g) = quad
@@ -93,7 +91,7 @@ class OxigraphStore(Store):
     def remove(
         self,
         triple: _TriplePattern,
-        context: Optional[Graph] = None,
+        context: Graph | None = None,
     ) -> None:
         for q in self._inner.quads_for_pattern(*to_ox_quad_pattern(triple, context)):
             self._inner.remove(q)
@@ -102,8 +100,8 @@ class OxigraphStore(Store):
     def triples(
         self,
         triple_pattern: _TriplePattern,
-        context: Optional[Graph] = None,
-    ) -> Iterator[Tuple[_Triple, Iterator[Optional[Graph]]]]:
+        context: Graph | None = None,
+    ) -> Iterator[tuple[_Triple, Iterator[Graph | None]]]:
         try:
             return (
                 (
@@ -115,7 +113,7 @@ class OxigraphStore(Store):
         except (TypeError, ValueError):
             return iter(())  # We just don't return anything
 
-    def __len__(self, context: Optional[Graph] = None) -> int:
+    def __len__(self, context: Graph | None = None) -> int:
         return int(
             next(
                 self._inner.query(
@@ -127,7 +125,7 @@ class OxigraphStore(Store):
             )[0].value,
         )
 
-    def contexts(self, triple: Optional[_Triple] = None) -> Generator[Graph, None, None]:
+    def contexts(self, triple: _Triple | None = None) -> Generator[Graph, None, None]:
         if triple is None:
             return (from_ox_graph_name(g, self) for g in self._inner.named_graphs())
         return (
@@ -136,12 +134,12 @@ class OxigraphStore(Store):
 
     def query(
         self,
-        query: Union[Query, str],
-        initNs: Mapping[str, Any],  # noqa: N803
-        initBindings: Mapping[str, Identifier],  # noqa: N803
-        queryGraph: str,  # noqa: N803
+        query: Query | str,
+        initNs: Mapping[str, Any],
+        initBindings: Mapping[str, Identifier],
+        queryGraph: str,
         **kwargs: object,
-    ) -> "Result":
+    ) -> Result:
         if isinstance(query, Query):
             raise NotImplementedError("The already parsed Queries are not supported by Oxigraph store")
         for kwarg in kwargs:
@@ -165,15 +163,15 @@ class OxigraphStore(Store):
             out.graph = Graph()
             out.graph += (from_ox(t) for t in result)
         else:
-            raise ValueError(f"Unexpected query result: {result}")
+            raise TypeError(f"Unexpected query result: {result}")
         return out
 
     def update(
         self,
-        update: Union[Update, str],
-        initNs: Mapping[str, Any],  # noqa: N803
-        initBindings: Mapping[str, Identifier],  # noqa: N803
-        queryGraph: str,  # noqa: N803
+        update: Update | str,
+        initNs: Mapping[str, Any],
+        initBindings: Mapping[str, Identifier],
+        queryGraph: str,
         **kwargs: object,
     ) -> None:
         if initBindings:
@@ -222,11 +220,11 @@ class OxigraphStore(Store):
         del self._prefix_for_namespace[namespace]
         self._delete_from_prefix(prefix)
 
-    def prefix(self, namespace: URIRef) -> Optional[str]:
+    def prefix(self, namespace: URIRef) -> str | None:
         return self._prefix_for_namespace.get(namespace)
 
-    def namespace(self, prefix: str) -> Optional[URIRef]:
+    def namespace(self, prefix: str) -> URIRef | None:
         return self._namespace_for_prefix.get(prefix)
 
-    def namespaces(self) -> Iterator[Tuple[str, URIRef]]:
+    def namespaces(self) -> Iterator[tuple[str, URIRef]]:
         yield from self._namespace_for_prefix.items()

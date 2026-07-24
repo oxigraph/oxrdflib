@@ -1,5 +1,7 @@
+from __future__ import annotations
+
 from abc import ABC, abstractmethod
-from typing import IO, Final, Optional
+from typing import IO, Final
 
 from pyoxigraph import RdfFormat, serialize
 from rdflib import Dataset
@@ -23,9 +25,9 @@ class _OxigraphSerializer(Serializer, ABC):
     def serialize(
         self,
         stream: IO[bytes],
-        base: Optional[str] = None,
-        encoding: Optional[str] = None,
-        **kwargs: object,  # noqa: ARG002
+        base: str | None = None,
+        encoding: str | None = None,
+        **kwargs: object,
     ) -> None:
         if encoding not in (None, "utf-8"):
             raise ValueError(f"RDF files are always utf-8 encoded, I was passed: {encoding}")
